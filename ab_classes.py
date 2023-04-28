@@ -79,30 +79,28 @@ class Adres(Field):
 
 
 class Phone(Field):
-    min_len = 5
-    max_len = 17
+    min_len = 8
+    max_len = 13
 
     @property
     def value(self):
         return self.__value
 
     @value.setter
-    def value(self, value):
-        new_phone = (  # Phone validation
-            value.strip()
-            .removeprefix("+")
-            .replace("(", "")
-            .replace(")", "")
-            .replace("-", "")
-        )
-        if (
-            not new_phone.isdecimal()
-            or not Phone.min_len <= len(new_phone) <= Phone.max_len
-        ):
+    def value(self, number):
+        number = re.sub('\D+', '', number)
+        if len(number) == 12:
+            number = "+" + number
+        elif len(number) == 10:
+            number = "+38" + number
+        elif len(number) == 9:
+            number = "+380" + number
+        else:
             raise ValueError(
-                f" Minimum phone number length is {Phone.min_len} digits. Maximum {Phone.max_len}.Letters not allowed!"
-            )
-        self.__value = new_phone
+                "\nВи ввели невірний формат номера.\n Спробуйте знову!\n Мінімальна к-сть символів:{Phone.min_len}.\n Максимальна:{Phone.max_len}.")
+            number = None
+
+        self.__value = number
 
 
 class Record:
