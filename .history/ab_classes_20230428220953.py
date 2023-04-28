@@ -68,16 +68,6 @@ class Email(Field):
             raise ValueError("Невірний формат e-mail")
 
 
-class Adres(Field):
-    @property
-    def value(self):
-        return self.__value
-
-    @value.setter
-    def value(self, value):
-        self.__value = value
-
-
 class Phone(Field):
     min_len = 5
     max_len = 17
@@ -112,7 +102,6 @@ class Record:
         phone: Phone = None,
         birthday: Birthday = None,
         email: Email = None,
-        adres: Adres = None,
     ):
         self.name = name
         self.phones = []
@@ -120,26 +109,23 @@ class Record:
             self.phones.append(phone)
         self.birthday = birthday
         self.email = email
-        self.adres = adres
 
     def __str__(self):
-        line = "{}: Телефони: {}; E-mail: {}; Дата народження: {}; Адреса: {} \n"
+        line = "{}: Телефони: {}; E-mail: {}; Дата народження: {} \n"
         return line.format(
             self.name,
             ", ".join([str(phone) for phone in self.phones]),
             self.email,
             self.birthday,
-            self.adres,
         )
 
     def __repr__(self):
-        line = "{}: Phones: {}; E-mail: {}; B-day: {} \n"
+        line = "{}: Телефони: {}; E-mail: {}; Дата народження: {} \n"
         return line.format(
             self.name,
             ", ".join([str(phone) for phone in self.phones]),
             self.email,
             self.birthday,
-            self.adres,
         )
 
     def days_to_birthday(self) -> int:
@@ -154,7 +140,7 @@ class Record:
             return "Це сьогодні!!!"
         else:
             days = int((compare.replace(year=today.year + 1) - today).days)
-            return f"{days} днів до народження"
+            return f"{days} днів до дня народження"
 
     def add_email(self, email: Email):
         if not self.email:

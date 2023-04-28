@@ -1,4 +1,4 @@
-from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook, Adres
+from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook
 from functools import wraps
 from pathlib import Path
 import re
@@ -17,10 +17,10 @@ def input_error(func):
 
         except TypeError as err:
             if func.__name__ == "add" or func.__name__ == "change":
-                message = "Введіть ім'я та номер телефону будь ласка. мінімальна довжина номеру телефону {} цифр. Максимальна {}. Літери не дозволяються"
+                message = "Give me name and phone please. Minimum phone number length is {} digits. Maximum {}.Letters not allowed!"
                 return message.format(Phone.min_len, Phone.max_len)
             if func.__name__ == "add_birthday":
-                return "введіть ім'я та день народження"
+                return "введіть ім'я і день народження"
             if func.__name__ == "add_email":
                 return "введіть ім'я та e-mail"
             return err
@@ -57,19 +57,12 @@ def add(book: AddressBook, contact: str, phone: str = None):
 
 
 @input_error
-def add_adres(book: AddressBook, contact: str, *adres):
-    x=' '.join(adres)
-    adres_new = Adres(x)
-    rec = book.get(contact)
-    rec.add_adres(adres_new)
-    return f'Updated existing contact "{contact}" with new adres: {x}'
-
-@input_error
 def add_email(book: AddressBook, contact: str, email: str):
     email_new = Email(email)
     rec = book.get(contact)
     rec.add_email(email_new)
     return f'Для існуючого контакту "{contact}" додано e-mail: {email}'
+
 
 @input_error
 def add_birthday(book: AddressBook, contact: str, birthday: str):
@@ -87,7 +80,7 @@ def congrat(book: AddressBook, *args):
 
 
 @input_error
-def change(book: AddressBook, contact: str, phone: str = None,):
+def change(book: AddressBook, contact: str, phone: str = None):
     rec = book.get(contact)
 
     print(rec.show_phones())
@@ -166,14 +159,6 @@ def del_birthday(book: AddressBook, *args):
     rec.birthday = None
     return f"Контакт {contact}, день народження видалений"
 
-@input_error
-def del_adres(book: AddressBook, *args):
-    contact = " ".join(args)
-    rec = book.get(contact)
-    rec.adres = None
-    return f"Contact {contact}, adres deleted"
-
-
 
 @input_error
 def phone(book: AddressBook, *args):
@@ -216,9 +201,7 @@ def search(book: AddressBook, *args):
 
 @input_error
 def help(*args):
-    with open("README.md", "rb") as help_file:
-        output = help_file.read().decode("utf-8")
-        return output
+    return f"available commands: {', '.join(k for k in COMMANDS.keys())}"
 
 
 @input_error
@@ -226,7 +209,7 @@ def exit(book: AddressBook, *args):
     global is_ended
     is_ended = True
     book.save_to_file(DB_FILE_NAME)
-    return "До побачення"
+    return "Допобачення"
 
 
 @input_error
@@ -238,14 +221,12 @@ COMMANDS = {
     "hello": greet,
     "add email": add_email,
     "add b_day": add_birthday,
-    "add adres":add_adres,
     "add": add,
     "congrat": congrat,
     "change": change,
     "phone": phone,
     "show all": show_all,
     "search": search,
-    "del adres":del_adres,
     "del phone": del_phone,
     "del b_day": del_birthday,
     "del email": del_email,
@@ -263,7 +244,8 @@ def command_parser(line: str):
     for k, v in COMMANDS.items():
         if line_prep.lower().startswith(k + " ") or line_prep.lower() == k:
             return v, re.sub(k, "", line_prep, flags=re.IGNORECASE).strip().rsplit(
-                " ")
+                " ", 1
+            )
     return no_command, []
 
 

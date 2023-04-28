@@ -1,4 +1,4 @@
-from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook, Adres
+from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook
 from functools import wraps
 from pathlib import Path
 import re
@@ -57,19 +57,12 @@ def add(book: AddressBook, contact: str, phone: str = None):
 
 
 @input_error
-def add_adres(book: AddressBook, contact: str, *adres):
-    x=' '.join(adres)
-    adres_new = Adres(x)
-    rec = book.get(contact)
-    rec.add_adres(adres_new)
-    return f'Updated existing contact "{contact}" with new adres: {x}'
-
-@input_error
 def add_email(book: AddressBook, contact: str, email: str):
     email_new = Email(email)
     rec = book.get(contact)
     rec.add_email(email_new)
     return f'Для існуючого контакту "{contact}" додано e-mail: {email}'
+
 
 @input_error
 def add_birthday(book: AddressBook, contact: str, birthday: str):
@@ -87,7 +80,7 @@ def congrat(book: AddressBook, *args):
 
 
 @input_error
-def change(book: AddressBook, contact: str, phone: str = None,):
+def change(book: AddressBook, contact: str, phone: str = None):
     rec = book.get(contact)
 
     print(rec.show_phones())
@@ -166,14 +159,6 @@ def del_birthday(book: AddressBook, *args):
     rec.birthday = None
     return f"Контакт {contact}, день народження видалений"
 
-@input_error
-def del_adres(book: AddressBook, *args):
-    contact = " ".join(args)
-    rec = book.get(contact)
-    rec.adres = None
-    return f"Contact {contact}, adres deleted"
-
-
 
 @input_error
 def phone(book: AddressBook, *args):
@@ -217,7 +202,7 @@ def search(book: AddressBook, *args):
 @input_error
 def help(*args):
     with open("README.md", "rb") as help_file:
-        output = help_file.read().decode("utf-8")
+        output = help_file.readlines()
         return output
 
 
@@ -238,14 +223,12 @@ COMMANDS = {
     "hello": greet,
     "add email": add_email,
     "add b_day": add_birthday,
-    "add adres":add_adres,
     "add": add,
     "congrat": congrat,
     "change": change,
     "phone": phone,
     "show all": show_all,
     "search": search,
-    "del adres":del_adres,
     "del phone": del_phone,
     "del b_day": del_birthday,
     "del email": del_email,
@@ -263,7 +246,8 @@ def command_parser(line: str):
     for k, v in COMMANDS.items():
         if line_prep.lower().startswith(k + " ") or line_prep.lower() == k:
             return v, re.sub(k, "", line_prep, flags=re.IGNORECASE).strip().rsplit(
-                " ")
+                " ", 1
+            )
     return no_command, []
 
 

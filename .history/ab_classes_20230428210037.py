@@ -31,7 +31,7 @@ class Name(Field):
             self.__value = value
         else:
             raise ValueError(
-                "Ім'я не може складатись тільки з цифр та мінімальна довжина імені 3 символа."
+                "Name cannot consist of only digits and min name length is 3."
             )
 
 
@@ -46,7 +46,7 @@ class Birthday(Field):
             self.__value = datetime.strptime(value, "%d.%m.%Y")  # Date validaiton "."
             self.__value = datetime.strptime(value, "%d/%m/%Y")  # Date validaiton "/"
         except ValueError:
-            return "використовуйте формат дати ДД.ММ.РРРР або ДД/ММ/РРРР"
+            return "use date format DD.MM.YYYY or DD/MM/YYYY"
 
     def __str__(self) -> str:
         return datetime.strftime(self.value, "%d.%m.%Y")
@@ -65,17 +65,7 @@ class Email(Field):
         if re.match(pattern, value):
             self.__value = value
         else:
-            raise ValueError("Невірний формат e-mail")
-
-
-class Adres(Field):
-    @property
-    def value(self):
-        return self.__value
-
-    @value.setter
-    def value(self, value):
-        self.__value = value
+            raise ValueError("invalid email format")
 
 
 class Phone(Field):
@@ -112,7 +102,6 @@ class Record:
         phone: Phone = None,
         birthday: Birthday = None,
         email: Email = None,
-        adres: Adres = None,
     ):
         self.name = name
         self.phones = []
@@ -120,16 +109,14 @@ class Record:
             self.phones.append(phone)
         self.birthday = birthday
         self.email = email
-        self.adres = adres
 
     def __str__(self):
-        line = "{}: Телефони: {}; E-mail: {}; Дата народження: {}; Адреса: {} \n"
+        line = "{}: Phones: {}; E-mail: {}; B-day: {} \n"
         return line.format(
             self.name,
             ", ".join([str(phone) for phone in self.phones]),
             self.email,
             self.birthday,
-            self.adres,
         )
 
     def __repr__(self):
@@ -139,60 +126,59 @@ class Record:
             ", ".join([str(phone) for phone in self.phones]),
             self.email,
             self.birthday,
-            self.adres,
         )
 
     def days_to_birthday(self) -> int:
         if not self.birthday:
-            return "Вибачте, немає данних по даті народження цього контакту"
+            return "Sorry, no birthdate for this contact"
         today = datetime.today()
         compare = self.birthday.value.replace(year=today.year)
         days = int((compare - today).days)
         if days > 0:
-            return f"{days} днів до народження"
+            return f"{days} days to birthday"
         elif today.month == compare.month and today.day == compare.day:
-            return "Це сьогодні!!!"
+            return "It is TODAY!!!"
         else:
             days = int((compare.replace(year=today.year + 1) - today).days)
-            return f"{days} днів до народження"
+            return f"{days} days to birthday"
 
     def add_email(self, email: Email):
         if not self.email:
             self.email = email
         else:
-            raise IndexError("E-mail вже введений")
+            raise IndexError("E-mail already entered")
 
     def add_phone(self, phone: Phone):
         if phone in self.phones:
-            raise IndexError("Цей номер телефону вже існує")
+            raise IndexError("This phone number already exists")
         self.phones.append(phone)
 
     def add_birthday(self, birthday: Birthday):
         if not self.birthday:
             self.birthday = birthday
         else:
-            raise IndexError("День народження вже введений")
+            raise IndexError("Birthday already entered")
 
     def show_phones(self):
         if not self.phones:
-            return "В цього контакта не має телефонів"
+            return "this contact has no phones."
         elif len(self.phones) == 1:
-            return f"Поточний номер телефону {self.phones[0]}"
+            return f"Current phone number is {self.phones[0]}"
         else:
-            output = "В цього контакта декілька телефонів:\n"
+            output = "This contact has several phones:\n"
             for i, phone in enumerate(self.phones, 1):
                 output += f"{i}: {phone} "
             return output
 
     def del_phone(self, num=1):
         if not self.phones:
-            raise IndexError("В цього контакта не має збережених телефонів")
+            raise IndexError("this contact has no phones saved")
         else:
             return self.phones.pop(num - 1)
 
     def edit_phone(self, phone_new: Phone, num=1):
         if not self.phones:
-            raise IndexError("В цього контакта не має збережених телефонів")
+            raise IndexError("this contact has no phones saved")
         else:
             self.phones.pop(num - 1)
             self.phones.insert(num - 1, phone_new)
@@ -220,7 +206,7 @@ class AddressBook(UserDict):
             for i in islice(self.data.values(), start, start + page):
                 output += str(i)
             if not output:
-                output = f"Всього: {len(self.data)} контактів."
+                output = f"Total: {len(self.data)} contacts."
                 yield output
                 break
             yield output
@@ -230,8 +216,8 @@ class AddressBook(UserDict):
         output = ""
         for contact in self.data.values():
             output += str(contact)
-        output += f"Всього: {len(self.data)} контактів."
-        return output if output else "Телефонна книга порожня"
+        output += f"Total: {len(self.data)} contacts."
+        return output if output else "Phonebook is empty"
 
     def search(self, pattern: str) -> list:
         found_recs = []
