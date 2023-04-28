@@ -17,10 +17,10 @@ def input_error(func):
 
         except TypeError as err:
             if func.__name__ == "add" or func.__name__ == "change":
-                message = "Введіть ім'я та номер телефону будь ласка. мінімальна довжина номеру телефону {} цифр. Максимальна {}. Літери не дозволяються"
+                message = "Give me name and phone please. Minimum phone number length is {} digits. Maximum {}.Letters not allowed!"
                 return message.format(Phone.min_len, Phone.max_len)
             if func.__name__ == "add_birthday":
-                return "введіть ім'я та день народження"
+                return "введіть ім'я і день народження"
             if func.__name__ == "add_email":
                 return "введіть ім'я та e-mail"
             return err
@@ -137,7 +137,7 @@ def del_email(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
     rec.email = None
-    return f"Контакт {contact}, e-mail видалено"
+    return f"Contact {contact}, email deleted"
 
 
 @input_error
@@ -176,7 +176,7 @@ def show_all(book: AddressBook, *args):
         for i in gen_obj:
             print(i)
             print("*" * 50)
-            input("Нажміть будь-яку клавішу")
+            input("Нажміть будь-яку ")
 
 
 @input_error
@@ -201,9 +201,7 @@ def search(book: AddressBook, *args):
 
 @input_error
 def help(*args):
-    with open("README.md", "rb") as help_file:
-        output = help_file.read().decode("utf-8")
-        return output
+    return f"available commands: {', '.join(k for k in COMMANDS.keys())}"
 
 
 @input_error
@@ -211,12 +209,12 @@ def exit(book: AddressBook, *args):
     global is_ended
     is_ended = True
     book.save_to_file(DB_FILE_NAME)
-    return "До побачення"
+    return "Good bye!"
 
 
 @input_error
 def no_command(*args):
-    return "Такої команди немає"
+    return "No such command"
 
 
 COMMANDS = {

@@ -201,8 +201,8 @@ def search(book: AddressBook, *args):
 
 @input_error
 def help(*args):
-    with open("README.md", "rb") as help_file:
-        output = help_file.read().decode("utf-8")
+    with open("README.md", "r") as help_file:
+        output = help_file.readlines()
         return output
 
 

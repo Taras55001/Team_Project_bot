@@ -201,9 +201,7 @@ def search(book: AddressBook, *args):
 
 @input_error
 def help(*args):
-    with open("README.md", "rb") as help_file:
-        output = help_file.read().decode("utf-8")
-        return output
+    return f"available commands: {', '.join(k for k in COMMANDS.keys())}"
 
 
 @input_error
@@ -211,7 +209,7 @@ def exit(book: AddressBook, *args):
     global is_ended
     is_ended = True
     book.save_to_file(DB_FILE_NAME)
-    return "До побачення"
+    return "Допобачення"
 
 
 @input_error
