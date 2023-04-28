@@ -68,7 +68,7 @@ class Email(Field):
             raise ValueError("invalid email format")
 
 class Adres(Field):
-    
+
     @property
     def value(self):
         return self.__value
@@ -111,6 +111,7 @@ class Record:
         phone: Phone = None,
         birthday: Birthday = None,
         email: Email = None,
+        adres:Adres=None
     ):
         self.name = name
         self.phones = []
@@ -118,23 +119,26 @@ class Record:
             self.phones.append(phone)
         self.birthday = birthday
         self.email = email
+        self.adres=adres
 
     def __str__(self):
-        line = "{}: Phones: {}; E-mail: {}; B-day: {} \n"
+        line = "{}: Phones: {}; E-mail: {}; B-day: {}; Adres: {} \n"
         return line.format(
             self.name,
             ", ".join([str(phone) for phone in self.phones]),
             self.email,
             self.birthday,
+            self.adres,
         )
 
     def __repr__(self):
-        line = "{}: Phones: {}; E-mail: {}; B-day: {} \n"
+        line = "{}: Phones: {}; E-mail: {}; B-day: {}; Adres: {} \n"
         return line.format(
             self.name,
             ", ".join([str(phone) for phone in self.phones]),
             self.email,
             self.birthday,
+            self.adres,
         )
 
     def days_to_birthday(self) -> int:
@@ -150,7 +154,11 @@ class Record:
         else:
             days = int((compare.replace(year=today.year + 1) - today).days)
             return f"{days} days to birthday"
-
+    def add_adres(self, adres: Adres):
+        if not self.adres:
+            self.adres = adres
+        else:
+            raise IndexError("Adres already entered")
     def add_email(self, email: Email):
         if not self.email:
             self.email = email
