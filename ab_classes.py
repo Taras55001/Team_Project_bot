@@ -67,6 +67,15 @@ class Email(Field):
         else:
             raise ValueError("invalid email format")
 
+class Adres(Field):
+    
+    @property
+    def value(self):
+        return self.__value
+    
+    @value.setter
+    def value(self, value):
+        self.__value = value
 
 class Phone(Field):
     min_len = 5
