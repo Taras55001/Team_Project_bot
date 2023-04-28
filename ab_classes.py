@@ -20,6 +20,57 @@ class Field:
         return self.value == other.value
 
 
+class Note:
+    def __init__(self, text, done=None):
+        self.day = datetime.today()
+        self.done = done
+        self.done_date = None
+        self.text = text
+        self.stat = False
+
+    def __repr__(self) -> str:
+        return self.text
+
+
+class HashTag:
+    def __init__(self, tag) -> None:
+        self.tag = tag
+
+    def __repr__(self) -> str:
+        return self.tag
+
+
+class NotePad:
+    note_list = []
+    tag_list = []
+
+    def add_tag(self, note):
+        if type(note) is Note:
+            if note not in self.note_list:
+                self.note_list.append(note)
+        else:
+            if note not in self.tag_list:
+                self.tag_list.append(note)
+
+    def change_tag(self, note, new_note):
+        if type(note) is Note:
+            self.note_list.remove(note)
+            self.note_list.append(new_note)
+        else:
+            self.tag_list.remove(note)
+            self.tag_list.append(new_note)
+
+    def change_status(self, note):
+        self.note_list(note).stat = True
+        self.note_list(note).done_date = datetime.today()
+
+    def delete(self, note):
+        if type(note) is Note:
+            self.note_list.remove(note)
+        else:
+            self.tag_list.remove(note)
+
+
 class Name(Field):
     @property
     def value(self):
@@ -43,8 +94,10 @@ class Birthday(Field):
     @value.setter
     def value(self, value):
         try:
-            self.__value = datetime.strptime(value, "%d.%m.%Y")  # Date validaiton "."
-            self.__value = datetime.strptime(value, "%d/%m/%Y")  # Date validaiton "/"
+            self.__value = datetime.strptime(
+                value, "%d.%m.%Y")  # Date validaiton "."
+            self.__value = datetime.strptime(
+                value, "%d/%m/%Y")  # Date validaiton "/"
         except ValueError:
             return "використовуйте формат дати ДД.ММ.РРРР або ДД/ММ/РРРР"
 
@@ -60,7 +113,8 @@ class Email(Field):
     @value.setter
     def value(self, value):
         pattern = (
-            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"  # Email validation
+            # Email validation
+            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         )
         if re.match(pattern, value):
             self.__value = value
