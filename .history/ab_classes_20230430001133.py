@@ -146,14 +146,18 @@ class Record:
         )
 
     def days_to_birthday(self) -> int:
+        if not self.birthday:
+            return "Вибачте, немає данних по даті народження цього контакту"
         today = datetime.today()
         compare = self.birthday.value.replace(year=today.year)
         days = int((compare - today).days)
-        if days >= 0:
-            return days
+        if days > 0:
+            return f"{days} днів до народження"
+        elif today.month == compare.month and today.day == compare.day:
+            return "Це сьогодні!!!"
         else:
             days = int((compare.replace(year=today.year + 1) - today).days)
-            return days
+            return f"{days} днів до народження"
 
     def add_email(self, email: Email):
         if not self.email:

@@ -1,10 +1,9 @@
 from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook, Adress
 from functools import wraps
-import json
 from pathlib import Path
 import re
 import sort_folder
-
+import json
 
 PAGE = 10
 db_file_name = ""
@@ -47,14 +46,16 @@ def greet(*args):
 @input_error
 def add(book: AddressBook, contact: str, phone: str = None):
     contact_new = Name(contact)
+    if contact_new in book.keys():
+        
     phone_new = Phone(phone) if phone else None
     rec_new = Record(contact_new, phone_new)
 
-    if contact_new.value not in book.keys():
+    if contact not in book.keys():
         book.add_record(rec_new)
-        return f'Додано контакт "{contact}" з телефоном: {phone}'
+        return f'Добавлено контакт "{contact}" з телефоном: {phone}'
     else:
-        book.get(contact_new.value).add_phone(phone_new)
+        book.get(contact).add_phone(phone_new)
         return f'Для існуючого контакту "{contact}" додано номер телефону: {phone}'
 
 
@@ -84,19 +85,10 @@ def add_birthday(book: AddressBook, contact: str, birthday: str):
 
 
 @input_error
-def congrat(book: AddressBook, days: int):
-    if days == "":
-        raise ValueError("Введіть число днів")
-    output = ""
-    for contact in book.values():
-        if contact.days_to_birthday() <= int(days):
-            output += str(contact)
-    text = (
-        f"день народження у наступних контактів:\n{output}"
-        if output
-        else "ні в кого з контактів не має дня народження"
-    )
-    return f"В період наступних {days} днів {text}"
+def congrat(book: AddressBook, *args):
+    contact = " ".join(args)
+    rec = book.get(contact)
+    return rec.days_to_birthday()
 
 
 @input_error
@@ -209,7 +201,7 @@ def show_all(book: AddressBook, *args):
             print(i)
             print("*" * 50)
             input("Нажміть будь-яку клавішу")
-        x = book.lening()
+        x=book.lening()
         return f"Всього: {x} контактів."
 
 
@@ -217,7 +209,7 @@ def show_all(book: AddressBook, *args):
 def search(book: AddressBook, *args):
     pattern = " ".join(args)
     if len(pattern) < 3:
-        return "довжина рядка для пошуку >= 3"
+        return "довжина рядка для пощуку >= 3"
     result = book.search(pattern)
     if not result:
         return "не знайдено"
