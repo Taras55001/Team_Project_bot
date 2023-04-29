@@ -1,13 +1,12 @@
-from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook, Adres
+from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook, Adress
 from functools import wraps
 from pathlib import Path
 import re
-
+import sort_folder
+import json
 
 PAGE = 10
-
 db_file_name = ""
-
 
 
 def input_error(func):
@@ -59,12 +58,13 @@ def add(book: AddressBook, contact: str, phone: str = None):
 
 
 @input_error
-def add_adres(book: AddressBook, contact: str, *adres):
-    x=' '.join(adres)
-    adres_new = Adres(x)
+def add_adress(book: AddressBook, contact: str, *adress):
+    x = " ".join(adress)
+    adress_new = Adress(x)
     rec = book.get(contact)
-    rec.add_adres(adres_new)
-    return f'Updated existing contact "{contact}" with new adres: {x}'
+    rec.add_adress(adress_new)
+    return f'Для існуючого контакту "{contact}" додано адресу: {x}'
+
 
 @input_error
 def add_email(book: AddressBook, contact: str, email: str):
@@ -72,6 +72,7 @@ def add_email(book: AddressBook, contact: str, email: str):
     rec = book.get(contact)
     rec.add_email(email_new)
     return f'Для існуючого контакту "{contact}" додано e-mail: {email}'
+
 
 @input_error
 def add_birthday(book: AddressBook, contact: str, birthday: str):
@@ -89,7 +90,11 @@ def congrat(book: AddressBook, *args):
 
 
 @input_error
-def change(book: AddressBook, contact: str, phone: str = None,):
+def change(
+    book: AddressBook,
+    contact: str,
+    phone: str = None,
+):
     rec = book.get(contact)
 
     print(rec.show_phones())
@@ -168,13 +173,13 @@ def del_birthday(book: AddressBook, *args):
     rec.birthday = None
     return f"Контакт {contact}, день народження видалений"
 
+
 @input_error
-def del_adres(book: AddressBook, *args):
+def del_adress(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
-    rec.adres = None
-    return f"Contact {contact}, adres deleted"
-
+    rec.adress = None
+    return f"Контакт {contact}, адреса видалена"
 
 
 @input_error
@@ -186,7 +191,7 @@ def phone(book: AddressBook, *args):
 
 @input_error
 def show_all(book: AddressBook, *args):
-    if len(book) <= PAGE:
+    if len(book) < PAGE:
         return book.show_all()
     else:
         gen_obj = book.iterator(PAGE)
@@ -194,18 +199,16 @@ def show_all(book: AddressBook, *args):
             print(i)
             print("*" * 50)
             input("Нажміть будь-яку клавішу")
-        x=book.lening()
-        return f"Всього: {x} контактів."
 
 
 @input_error
 def search(book: AddressBook, *args):
     pattern = " ".join(args)
     if len(pattern) < 3:
-        return "search string length >= 3"
+        return "довжина рядка для пощуку >= 3"
     result = book.search(pattern)
     if not result:
-        return "not found!"
+        return "не знайдено"
     matches = ""
     for i in result:
         matches += str(i)
@@ -219,8 +222,8 @@ def search(book: AddressBook, *args):
 
 
 @input_error
-def sort_targ_folder(*args):
-    target_path = args[1]
+def sort_targ_folder(book: AddressBook, *args):
+    target_path = " ".join(args)
     return sort_folder.main(target_path)
 
 
@@ -248,18 +251,19 @@ COMMANDS = {
     "hello": greet,
     "add email": add_email,
     "add b_day": add_birthday,
-    "add adres":add_adres,
+    "add adress": add_adress,
     "add": add,
     "congrat": congrat,
     "change": change,
     "phone": phone,
     "show all": show_all,
     "search": search,
-    "del adres":del_adres,
+    "del adress": del_adress,
     "del phone": del_phone,
     "del b_day": del_birthday,
     "del email": del_email,
     "del contact": del_contact,
+    "sort folder": sort_targ_folder,
     "close": exit,
     "good bye": exit,
     "exit": exit,
@@ -272,8 +276,7 @@ def command_parser(line: str):
     line_prep = " ".join(line.split())
     for k, v in COMMANDS.items():
         if line_prep.lower().startswith(k + " ") or line_prep.lower() == k:
-            return v, re.sub(k, "", line_prep, flags=re.IGNORECASE).strip().rsplit(
-                " ")
+            return v, re.sub(k, "", line_prep, flags=re.IGNORECASE).strip().rsplit(" ")
     return no_command, []
 
 
@@ -282,7 +285,6 @@ is_ended = False
 
 def main():
     book1 = AddressBook()
-
     global db_file_name
     with open("config.JSON") as cfg:
         cfg_data = json.load(cfg)
@@ -291,10 +293,7 @@ def main():
     if Path(db_file_name).exists():
         book1.load_from_file(db_file_name)
 
-
-
-    print("Добрий день!",f"доступні команди: {', '.join(k for k in COMMANDS.keys())}")
-
+    print("Добрий день!", f"доступні команди: {', '.join(k for k in COMMANDS.keys())}")
 
     while not is_ended:
         s = input(">>>")

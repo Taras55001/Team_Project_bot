@@ -68,7 +68,7 @@ class Email(Field):
             raise ValueError("Невірний формат e-mail")
 
 
-class Adres(Field):
+class Adress(Field):
     @property
     def value(self):
         return self.__value
@@ -112,7 +112,7 @@ class Record:
         phone: Phone = None,
         birthday: Birthday = None,
         email: Email = None,
-        adres: Adres = None,
+        adress: Adress = None,
     ):
         self.name = name
         self.phones = []
@@ -120,7 +120,7 @@ class Record:
             self.phones.append(phone)
         self.birthday = birthday
         self.email = email
-        self.adres = adres
+        self.adress = adress
 
     def __str__(self):
         line = "{}: Телефони: {}; E-mail: {}; Дата народження: {}; Адреса: {} \n"
@@ -133,7 +133,7 @@ class Record:
         )
 
     def __repr__(self):
-        line = "{}: Phones: {}; E-mail: {}; B-day: {} \n"
+        line = "{}: Телефони: {}; E-mail: {}; Дата народження: {}; Адреса: {} \n"
         return line.format(
             self.name,
             ", ".join([str(phone) for phone in self.phones]),
@@ -213,8 +213,6 @@ class AddressBook(UserDict):
     def remove_record(self, contact: str):
         return self.data.pop(contact)
 
-    def lening(self):
-        return len(self.data)
     def iterator(self, page):
         start = 0
         while True:
@@ -222,6 +220,8 @@ class AddressBook(UserDict):
             for i in islice(self.data.values(), start, start + page):
                 output += str(i)
             if not output:
+                output = f"Всього: {len(self.data)} контактів."
+                yield output
                 break
             yield output
             start += page
