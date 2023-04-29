@@ -203,7 +203,9 @@ def search(book: AddressBook, *args):
 
 @input_error
 def help(*args):
-    return f"available commands: {', '.join(k for k in COMMANDS.keys())}"
+    with open("README.md", "rb") as help_file:
+        output = help_file.read().decode("utf-8")
+        return output
 
 
 @input_error
@@ -259,7 +261,7 @@ def main():
     if Path(DB_FILE_NAME).exists():
         book1.load_from_file(DB_FILE_NAME)
 
-    print("Hello!", help())
+    print("Добрий день!",f"доступні команди: {', '.join(k for k in COMMANDS.keys())}")
 
     while not is_ended:
         s = input(">>>")
