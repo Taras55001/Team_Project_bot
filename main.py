@@ -191,7 +191,7 @@ def phone(book: AddressBook, *args):
 
 @input_error
 def show_all(book: AddressBook, *args):
-    if len(book) < PAGE:
+    if len(book) <= PAGE:
         return book.show_all()
     else:
         gen_obj = book.iterator(PAGE)
@@ -199,6 +199,8 @@ def show_all(book: AddressBook, *args):
             print(i)
             print("*" * 50)
             input("Нажміть будь-яку клавішу")
+        x=book.lening()
+        return f"Всього: {x} контактів."
 
 
 @input_error

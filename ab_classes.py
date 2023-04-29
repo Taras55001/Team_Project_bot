@@ -213,6 +213,8 @@ class AddressBook(UserDict):
     def remove_record(self, contact: str):
         return self.data.pop(contact)
 
+    def lening(self):
+        return len(self.data)
     def iterator(self, page):
         start = 0
         while True:
@@ -220,8 +222,6 @@ class AddressBook(UserDict):
             for i in islice(self.data.values(), start, start + page):
                 output += str(i)
             if not output:
-                output = f"Всього: {len(self.data)} контактів."
-                yield output
                 break
             yield output
             start += page
