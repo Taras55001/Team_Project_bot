@@ -223,7 +223,7 @@ def search(book: AddressBook, *args):
 
 @input_error
 def sort_targ_folder(book: AddressBook, *args):
-    target_path = " ".join(args)
+    target_path = " ".join(args[1:])
     return sort_folder.main(target_path)
 
 
