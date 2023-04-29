@@ -197,13 +197,17 @@ class Record:
 
 
 class AddressBook(UserDict):
+    def load_from_file(self, filename):
+        try:
+            with open(filename, "rb") as db:
+                self.data = pickle.load(db)
+        except EOFError:
+            pass
+    
     def save_to_file(self, filename):
         with open(filename, "wb") as db:
             pickle.dump(self.data, db)
 
-    def load_from_file(self, filename):
-        with open(filename, "rb") as db:
-            self.data = pickle.load(db)
 
     def add_record(self, record: Record):
         self.data.update({record.name.value: record})
