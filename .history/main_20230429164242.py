@@ -287,10 +287,11 @@ def main():
 
     with open("config.JSON") as cfg:
         cfg_data = json.load(cfg)
-        db_file_name = cfg_data["PhoneBookFile"]
-
+        db_file_name = cfg_data["FILETYPES"]
+        for key in CATEGORIES:
+            found_files.update({key: []})
     if Path(db_file_name).exists():
-        book1.load_from_file(db_file_name)
+        book1.load_from_file(DB_FILE_NAME)
 
     print("Добрий день!", f"доступні команди: {', '.join(k for k in COMMANDS.keys())}")
 

@@ -112,7 +112,7 @@ class Record:
         phone: Phone = None,
         birthday: Birthday = None,
         email: Email = None,
-        adress: Adress = None,
+        adres: Adres = None,
     ):
         self.name = name
         self.phones = []
@@ -120,7 +120,7 @@ class Record:
             self.phones.append(phone)
         self.birthday = birthday
         self.email = email
-        self.adress = adress
+        self.adres = adres
 
     def __str__(self):
         line = "{}: Телефони: {}; E-mail: {}; Дата народження: {}; Адреса: {} \n"

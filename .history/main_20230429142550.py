@@ -3,9 +3,9 @@ from functools import wraps
 from pathlib import Path
 import re
 import sort_folder
-import json
 
 PAGE = 10
+DB_FILE_NAME = "phonebook.bin"
 
 
 def input_error(func):
@@ -59,10 +59,10 @@ def add(book: AddressBook, contact: str, phone: str = None):
 @input_error
 def add_adress(book: AddressBook, contact: str, *adress):
     x = " ".join(adress)
-    adress_new = Adress(x)
+    adres_new = Adress(x)
     rec = book.get(contact)
     rec.add_adress(adress_new)
-    return f'Для існуючого контакту "{contact}" додано адресу: {x}'
+    return f'Для існуючого контакту "{contact}" додано адрес: {x}'
 
 
 @input_error
@@ -221,12 +221,6 @@ def search(book: AddressBook, *args):
 
 
 @input_error
-def sort_targ_folder(*args):
-    target_path = args[1]
-    return sort_folder.main(target_path)
-
-
-@input_error
 def help(*args):
     with open("README.md", "rb") as help_file:
         output = help_file.read().decode("utf-8")
@@ -262,7 +256,7 @@ COMMANDS = {
     "del b_day": del_birthday,
     "del email": del_email,
     "del contact": del_contact,
-    "sort folder": sort_targ_folder,
+    "sort folder": sort_taret_folder,
     "close": exit,
     "good bye": exit,
     "exit": exit,
@@ -284,13 +278,8 @@ is_ended = False
 
 def main():
     book1 = AddressBook()
-
-    with open("config.JSON") as cfg:
-        cfg_data = json.load(cfg)
-        db_file_name = cfg_data["PhoneBookFile"]
-
-    if Path(db_file_name).exists():
-        book1.load_from_file(db_file_name)
+    if Path(DB_FILE_NAME).exists():
+        book1.load_from_file(DB_FILE_NAME)
 
     print("Добрий день!", f"доступні команди: {', '.join(k for k in COMMANDS.keys())}")
 

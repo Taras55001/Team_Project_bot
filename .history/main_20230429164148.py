@@ -284,13 +284,10 @@ is_ended = False
 
 def main():
     book1 = AddressBook()
-
-    with open("config.JSON") as cfg:
-        cfg_data = json.load(cfg)
-        db_file_name = cfg_data["PhoneBookFile"]
-
-    if Path(db_file_name).exists():
-        book1.load_from_file(db_file_name)
+    
+    with open()
+    if Path(DB_FILE_NAME).exists():
+        book1.load_from_file(DB_FILE_NAME)
 
     print("Добрий день!", f"доступні команди: {', '.join(k for k in COMMANDS.keys())}")
 

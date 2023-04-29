@@ -3,9 +3,9 @@ from functools import wraps
 from pathlib import Path
 import re
 import sort_folder
-import json
 
 PAGE = 10
+DB_FILE_NAME = "phonebook.bin"
 
 
 def input_error(func):
@@ -222,8 +222,9 @@ def search(book: AddressBook, *args):
 
 @input_error
 def sort_targ_folder(*args):
-    target_path = args[1]
-    return sort_folder.main(target_path)
+    target_path = args[0]
+    sort_folder.main(target_path)
+    return output
 
 
 @input_error
@@ -284,13 +285,8 @@ is_ended = False
 
 def main():
     book1 = AddressBook()
-
-    with open("config.JSON") as cfg:
-        cfg_data = json.load(cfg)
-        db_file_name = cfg_data["PhoneBookFile"]
-
-    if Path(db_file_name).exists():
-        book1.load_from_file(db_file_name)
+    if Path(DB_FILE_NAME).exists():
+        book1.load_from_file(DB_FILE_NAME)
 
     print("Добрий день!", f"доступні команди: {', '.join(k for k in COMMANDS.keys())}")
 
