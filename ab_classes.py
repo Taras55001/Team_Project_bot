@@ -68,7 +68,7 @@ class Email(Field):
             raise ValueError("Невірний формат e-mail")
 
 
-class Adres(Field):
+class Adress(Field):
     @property
     def value(self):
         return self.__value
@@ -110,7 +110,7 @@ class Record:
         phone: Phone = None,
         birthday: Birthday = None,
         email: Email = None,
-        adres: Adres = None,
+        adress: Adress = None,
     ):
         self.name = name
         self.phones = []
@@ -118,7 +118,7 @@ class Record:
             self.phones.append(phone)
         self.birthday = birthday
         self.email = email
-        self.adres = adres
+        self.adress = adress
 
     def __str__(self):
         line = "{}: Телефони: {}; E-mail: {}; Дата народження: {}; Адреса: {} \n"
@@ -131,13 +131,13 @@ class Record:
         )
 
     def __repr__(self):
-        line = "{}: Phones: {}; E-mail: {}; B-day: {} \n"
+        line = "{}: Телефони: {}; E-mail: {}; Дата народження: {}; Адреса: {} \n"
         return line.format(
             self.name,
             ", ".join([str(phone) for phone in self.phones]),
             self.email,
             self.birthday,
-            self.adres,
+            self.adress,
         )
 
     def days_to_birthday(self) -> int:
