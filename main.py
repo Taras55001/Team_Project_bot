@@ -275,6 +275,8 @@ def main():
     if Path(DB_FILE_NAME).exists():
         book1.load_from_file(DB_FILE_NAME)
 
+    print("Добрий день!",f"доступні команди: {', '.join(k for k in COMMANDS.keys())}")
+
     while not is_ended:
         s = input(">>>")
 
