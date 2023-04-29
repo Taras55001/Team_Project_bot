@@ -97,7 +97,7 @@ class Phone(Field):
             number = "+380" + number
         else:
             raise ValueError(
-                "\nВи ввели невірний формат номера.\n Спробуйте знову!\n Мінімальна к-сть символів:{Phone.min_len}.\n Максимальна:{Phone.max_len}.")
+                f"\nВи ввели невірний формат номера.\n Спробуйте знову!\n Мінімальна к-сть символів:{Phone.min_len}.\n Максимальна:{Phone.max_len}.")
             number = None
 
         self.__value = number
