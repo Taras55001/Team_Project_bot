@@ -81,13 +81,14 @@ def add_birthday(book: AddressBook, contact: str, birthday: str):
     return f'Для існуючого контакту "{contact}" додано день народження: {b_day}'
 
 
-def add_note(notebook: NotePad, text: str):
+def add_note(notebook: NotePad, *args):
+    text = f'{" ".join(args)}'
     if text.startswith("#"):
         record = HashTag(text)
     else:
         record = Note(text)
     notebook.add_tag(record)
-    return f'Запис {record} створено'
+    return f'Запис "{record}" створено'
 
 
 @ input_error
@@ -126,36 +127,41 @@ def change(book: AddressBook, contact: str, phone: str = None,):
         return f'Змінено номер телефону {old_phone} на {phone_new} для контакту "{contact}"'
 
 
-def change_note(notebook: NotePad, text: str, new_note: str):
+def change_note(notebook: NotePad, *args):
+    text = f'{" ".join(args)}'
     if text.startswith("#"):
         record = HashTag(text)
+        new_note = input("введіть новий тег ")
         record_new = HashTag(new_note)
     else:
         record = Note(text)
+        new_note = input("введіть новий зміст нотатки ")
         record_new = Note(new_note)
     if record in notebook.note_list or record in notebook.tag_list:
         notebook.change_tag(record, record_new)
-        return f'{record} змінено на {record_new}'
-    return f'Запис {record} не знайдений'
+        return f'"{record}" змінено на "{record_new}"'
+    return f'Запис "{record}" не знайдений'
 
 
-def change_note_stat(notebook: NotePad, text: str):
+def change_note_stat(notebook: NotePad, *args):
+    text = f'{" ".join(args)}'
     record = Note(text)
     if record in notebook.note_list:
         notebook.change_status(record)
         return f'Статус нотатки змінено на "виконано"'
-    return f'Запис {record} не знайдений'
+    return f'Запис "{record}" не знайдений'
 
 
-def del_note(notebook: NotePad, text: str):
+def del_note(notebook: NotePad, *args):
+    text = f'{" ".join(args)}'
     if text.startswith("#"):
         record = HashTag(text)
     else:
         record = Note(text)
     if record in notebook.note_list or record in notebook.tag_list:
         notebook.delete(record)
-        return f'{record} видалений успішно'
-    return f'Запис {record} не знайдений'
+        return f'"{record}" видалений успішно'
+    return f'Запис "{record}" не знайдений'
 
 
 @ input_error
@@ -258,7 +264,8 @@ def search(book: AddressBook, *args):
     return f"Found {len(result)} match(es):\n" + highlighted
 
 
-def search_note(notebook: NotePad, text: str):
+def search_note(notebook: NotePad, *args):
+    text = f'{" ".join(args)}'
     error = f'Запис не знайдений'
     if text.startswith("#"):
         for tag in notebook.tag_list:
@@ -266,6 +273,20 @@ def search_note(notebook: NotePad, text: str):
     else:
         for note in notebook.note_list:
             return f'{note}' if text in str(note) else error
+
+
+def show_notes(notebook: NotePad):
+    line = ''
+    for note in notebook.note_list:
+        line += f'дата створення: {note.day.strftime("%d-%m-%Y")}.Зміст: {str(note)}.Статус {note.done}'+'\n'
+    return ("список нотатків\n"+line+"кінець списку нотаток")
+
+
+def show_tags(notebook: NotePad):
+    line = ''
+    for tag in notebook.tag_list:
+        line += f'{str(tag)}'+'\n'
+    return ("список тег\n"+line+"кінець списку тег")
 
 
 @ input_error
@@ -293,17 +314,19 @@ COMMANDS = {
     "add email": add_email,
     "add b_day": add_birthday,
     "add address": add_adres,
-    "add note":add_note,
+    "add note": add_note,
     "add": add,
     "congrat": congrat,
-    "change note":change_note,
-    "change note status":change_note_stat,
+    "change note": change_note,
+    "change note status": change_note_stat,
     "change": change,
     "phone": phone,
     "show all": show_all,
-    "search note":search_note,
+    "show notes": show_notes,
+    "show tags": show_tags,
+    "search note": search_note,
     "search": search,
-    "del note":del_note,
+    "del note": del_note,
     "del address": del_adres,
     "del phone": del_phone,
     "del b_day": del_birthday,
