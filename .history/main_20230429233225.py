@@ -52,7 +52,7 @@ def add(book: AddressBook, contact: str, phone: str = None):
 
     if contact_new.value not in book.keys():
         book.add_record(rec_new)
-        return f'Додано контакт "{contact}" з телефоном: {phone}'
+        return f'Добавлено контакт "{contact}" з телефоном: {phone}'
     else:
         book.get(contact_new.value).add_phone(phone_new)
         return f'Для існуючого контакту "{contact}" додано номер телефону: {phone}'
@@ -85,18 +85,10 @@ def add_birthday(book: AddressBook, contact: str, birthday: str):
 
 @input_error
 def congrat(book: AddressBook, days: int):
-    if days == "":
-        raise ValueError("Введіть число днів")
     output = ""
-    for contact in book.values():
-        if contact.days_to_birthday() <= int(days):
-            output += str(contact)
-    text = (
-        f"день народження у наступних контактів:\n{output}"
-        if output
-        else "ні в кого з контактів не має дня народження"
-    )
-    return f"В період наступних {days} днів {text}"
+    for contact in book.keys():
+    rec = book.get(contact)
+    return rec.days_to_birthday()
 
 
 @input_error
@@ -217,7 +209,7 @@ def show_all(book: AddressBook, *args):
 def search(book: AddressBook, *args):
     pattern = " ".join(args)
     if len(pattern) < 3:
-        return "довжина рядка для пошуку >= 3"
+        return "довжина рядка для пощуку >= 3"
     result = book.search(pattern)
     if not result:
         return "не знайдено"

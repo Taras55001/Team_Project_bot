@@ -85,8 +85,6 @@ def add_birthday(book: AddressBook, contact: str, birthday: str):
 
 @input_error
 def congrat(book: AddressBook, days: int):
-    if days == "":
-        raise ValueError("Введіть число днів")
     output = ""
     for contact in book.values():
         if contact.days_to_birthday() <= int(days):

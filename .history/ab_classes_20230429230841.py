@@ -44,13 +44,9 @@ class Birthday(Field):
     def value(self, value):
         try:
             self.__value = datetime.strptime(value, "%d.%m.%Y")  # Date validaiton "."
+            self.__value = datetime.strptime(value, "%d/%m/%Y")  # Date validaiton "/"
         except ValueError:
-            try:
-                self.__value = datetime.strptime(
-                    value, "%d/%m/%Y"
-                )  # Date validaiton "/"
-            except ValueError:
-                return "використовуйте формат дати ДД.ММ.РРРР або ДД/ММ/РРРР"
+            return "використовуйте формат дати ДД.ММ.РРРР або ДД/ММ/РРРР"
 
     def __str__(self) -> str:
         return datetime.strftime(self.value, "%d.%m.%Y")
@@ -146,14 +142,18 @@ class Record:
         )
 
     def days_to_birthday(self) -> int:
+        if not self.birthday:
+            return "Вибачте, немає данних по даті народження цього контакту"
         today = datetime.today()
         compare = self.birthday.value.replace(year=today.year)
         days = int((compare - today).days)
-        if days >= 0:
-            return days
+        if days > 0:
+            return f"{days} днів до народження"
+        elif today.month == compare.month and today.day == compare.day:
+            return "Це сьогодні!!!"
         else:
             days = int((compare.replace(year=today.year + 1) - today).days)
-            return days
+            return f"{days} днів до народження"
 
     def add_email(self, email: Email):
         if not self.email:
@@ -234,7 +234,7 @@ class AddressBook(UserDict):
         for contact in self.data.values():
             output += str(contact)
         output += f"Всього: {len(self.data)} контактів."
-        return output
+        return output if output else "Телефонна книга порожня"
 
     def search(self, pattern: str) -> list:
         found_recs = []
