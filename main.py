@@ -45,9 +45,9 @@ def greet(*args):
 
 
 @input_error
-def add(book: AddressBook, contact: str, phone:Phone, email:Email =None, *address):
+def add_contact(book: AddressBook, contact: str, phone:Phone, email:Email =None, *address):
     contact_new = Name(contact)
-    phone = Phone(phone)
+    phone = Phone(phone) if phone else None
     email= Email(email) if email else None
     address= Adress(" ".join(address)) if address else None
 
@@ -68,7 +68,7 @@ def add(book: AddressBook, contact: str, phone:Phone, email:Email =None, *addres
     
 
 @input_error
-def add_adress(book: AddressBook, contact: str, *adress):
+def add_address(book: AddressBook, contact: str, *adress):
     x = " ".join(adress)
     adress_new = Adress(x)
     rec = book.get(contact)
@@ -272,8 +272,8 @@ COMMANDS = {
     "hello": greet,
     "add email": add_email,
     "add b_day": add_birthday,
-    "add adress": add_adress,
-    "add": add,
+    "add address": add_address,
+    "add contact": add_contact,
     "congrat": congrat,
     "change": change,
     "phone": phone,
