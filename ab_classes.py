@@ -46,7 +46,25 @@ class HashTag:
         return self.text == other.text
 
 
-class NotePad:
+class NotePad:    
+    def load_from_file(self):
+        try:
+            with open("notelist.bin", "rb") as db:
+                self.note_list = pickle.load(db)
+        except EOFError:
+            pass
+        try:
+            with open("taglist.bin", "rb") as db:
+                self.tag_list = pickle.load(db)
+        except EOFError:
+            pass
+
+    def save_to_file(self):
+        with open("notelist.bin", "wb") as db:
+            pickle.dump(self.note_list, db)
+        with open("taglist.bin", "wb") as db:
+            pickle.dump(self.tag_list, db)
+        
     note_list = []
     tag_list = []
 
