@@ -297,10 +297,11 @@ def help(*args):
 
 
 @ input_error
-def exit(book: AddressBook, *args):
+def exit(book: AddressBook, notebook: NotePad, *args):
     global is_ended
     is_ended = True
     book.save_to_file(DB_FILE_NAME)
+    notebook.save_to_file()
     return "До побачення"
 
 
@@ -374,6 +375,7 @@ def main():
     notebook = NotePad()
     if Path(DB_FILE_NAME).exists():
         book1.load_from_file(DB_FILE_NAME)
+        notebook.load_from_file()
 
     while not is_ended:
         s = input(">>>")
