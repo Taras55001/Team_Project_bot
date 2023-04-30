@@ -31,13 +31,19 @@ class Note:
     def __repr__(self) -> str:
         return self.text
 
+    def __eq__(self, other):
+        return self.text == other.text
+
 
 class HashTag:
     def __init__(self, tag) -> None:
-        self.tag = tag
+        self.text = tag
 
     def __repr__(self) -> str:
-        return self.tag
+        return self.text
+
+    def __eq__(self, other):
+        return self.text == other.text
 
 
 class NotePad:
@@ -61,8 +67,10 @@ class NotePad:
             self.tag_list.append(new_note)
 
     def change_status(self, note):
-        self.note_list(note).stat = True
-        self.note_list(note).done_date = datetime.today()
+        i = self.note_list.index(note)
+        record = self.note_list[i]
+        record.stat = True
+        record.done_date = datetime.today()
 
     def delete(self, note):
         if type(note) is Note:

@@ -1,4 +1,4 @@
-from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook, Adres
+from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook, Adres, Note, NotePad, HashTag
 from functools import wraps
 from pathlib import Path
 import re
@@ -58,11 +58,12 @@ def add(book: AddressBook, contact: str, phone: str = None):
 
 @input_error
 def add_adres(book: AddressBook, contact: str, *adres):
-    x=' '.join(adres)
+    x = ' '.join(adres)
     adres_new = Adres(x)
     rec = book.get(contact)
     rec.add_adres(adres_new)
     return f'Updated existing contact "{contact}" with new adres: {x}'
+
 
 @input_error
 def add_email(book: AddressBook, contact: str, email: str):
@@ -70,6 +71,7 @@ def add_email(book: AddressBook, contact: str, email: str):
     rec = book.get(contact)
     rec.add_email(email_new)
     return f'Для існуючого контакту "{contact}" додано e-mail: {email}'
+
 
 @input_error
 def add_birthday(book: AddressBook, contact: str, birthday: str):
@@ -79,14 +81,23 @@ def add_birthday(book: AddressBook, contact: str, birthday: str):
     return f'Для існуючого контакту "{contact}" додано день народження: {b_day}'
 
 
-@input_error
+def add_note(notebook: NotePad, text: str):
+    if text.startswith("#"):
+        record = HashTag(text)
+    else:
+        record = Note(text)
+    notebook.add_tag(record)
+    return f'Запис {record} створено'
+
+
+@ input_error
 def congrat(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
     return rec.days_to_birthday()
 
 
-@input_error
+@ input_error
 def change(book: AddressBook, contact: str, phone: str = None,):
     rec = book.get(contact)
 
@@ -94,7 +105,8 @@ def change(book: AddressBook, contact: str, phone: str = None,):
 
     if not rec.phones:
         if not phone:
-            phone_new = Phone(input("Якщо хочете додати телефон введіть номер:"))
+            phone_new = Phone(
+                input("Якщо хочете додати телефон введіть номер:"))
         else:
             phone_new = Phone(phone)
         rec.add_phone(phone_new)
@@ -114,7 +126,39 @@ def change(book: AddressBook, contact: str, phone: str = None,):
         return f'Змінено номер телефону {old_phone} на {phone_new} для контакту "{contact}"'
 
 
-@input_error
+def change_note(notebook: NotePad, text: str, new_note: str):
+    if text.startswith("#"):
+        record = HashTag(text)
+        record_new = HashTag(new_note)
+    else:
+        record = Note(text)
+        record_new = Note(new_note)
+    if record in notebook.note_list or record in notebook.tag_list:
+        notebook.change_tag(record, record_new)
+        return f'{record} змінено на {record_new}'
+    return f'Запис {record} не знайдений'
+
+
+def change_note_stat(notebook: NotePad, text: str):
+    record = Note(text)
+    if record in notebook.note_list:
+        notebook.change_status(record)
+        return f'Статус нотатки змінено на "виконано"'
+    return f'Запис {record} не знайдений'
+
+
+def del_note(notebook: NotePad, text: str):
+    if text.startswith("#"):
+        record = HashTag(text)
+    else:
+        record = Note(text)
+    if record in notebook.note_list or record in notebook.tag_list:
+        notebook.delete(record)
+        return f'{record} видалений успішно'
+    return f'Запис {record} не знайдений'
+
+
+@ input_error
 def del_phone(book: AddressBook, contact: str, phone=None):
     rec = book.get(contact)
 
@@ -139,7 +183,7 @@ def del_phone(book: AddressBook, contact: str, phone=None):
     return f"Телефон {rec.del_phone(num)} видалено!"
 
 
-@input_error
+@ input_error
 def del_email(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -147,7 +191,7 @@ def del_email(book: AddressBook, *args):
     return f"Контакт {contact}, e-mail видалено"
 
 
-@input_error
+@ input_error
 def del_contact(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -159,14 +203,15 @@ def del_contact(book: AddressBook, *args):
     return f"Контакт {book.remove_record(contact)} Видалено!"
 
 
-@input_error
+@ input_error
 def del_birthday(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
     rec.birthday = None
     return f"Контакт {contact}, день народження видалений"
 
-@input_error
+
+@ input_error
 def del_adres(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -174,15 +219,14 @@ def del_adres(book: AddressBook, *args):
     return f"Contact {contact}, adres deleted"
 
 
-
-@input_error
+@ input_error
 def phone(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
     return f'Контакт "{contact}". {rec.show_phones()}'
 
 
-@input_error
+@ input_error
 def show_all(book: AddressBook, *args):
     if len(book) < PAGE:
         return book.show_all()
@@ -194,7 +238,7 @@ def show_all(book: AddressBook, *args):
             input("Нажміть будь-яку клавішу")
 
 
-@input_error
+@ input_error
 def search(book: AddressBook, *args):
     pattern = " ".join(args)
     if len(pattern) < 3:
@@ -214,14 +258,24 @@ def search(book: AddressBook, *args):
     return f"Found {len(result)} match(es):\n" + highlighted
 
 
-@input_error
+def search_note(notebook: NotePad, text: str):
+    error = f'Запис не знайдений'
+    if text.startswith("#"):
+        for tag in notebook.tag_list:
+            return f'{tag}' if text in str(tag) else error
+    else:
+        for note in notebook.note_list:
+            return f'{note}' if text in str(note) else error
+
+
+@ input_error
 def help(*args):
     with open("README.md", "rb") as help_file:
         output = help_file.read().decode("utf-8")
         return output
 
 
-@input_error
+@ input_error
 def exit(book: AddressBook, *args):
     global is_ended
     is_ended = True
@@ -229,7 +283,7 @@ def exit(book: AddressBook, *args):
     return "До побачення"
 
 
-@input_error
+@ input_error
 def no_command(*args):
     return "Такої команди немає"
 
@@ -238,14 +292,14 @@ COMMANDS = {
     "hello": greet,
     "add email": add_email,
     "add b_day": add_birthday,
-    "add address":add_adres,
+    "add address": add_adres,
     "add": add,
     "congrat": congrat,
     "change": change,
     "phone": phone,
     "show all": show_all,
     "search": search,
-    "del address":del_adres,
+    "del address": del_adres,
     "del phone": del_phone,
     "del b_day": del_birthday,
     "del email": del_email,
@@ -257,7 +311,7 @@ COMMANDS = {
 }
 
 
-@input_error
+@ input_error
 def command_parser(line: str):
     line_prep = " ".join(line.split())
     for k, v in COMMANDS.items():
@@ -272,12 +326,12 @@ is_ended = False
 
 def main():
     book1 = AddressBook()
+    notebook = NotePad()
     if Path(DB_FILE_NAME).exists():
         book1.load_from_file(DB_FILE_NAME)
 
     while not is_ended:
         s = input(">>>")
-
         command, args = command_parser(s)
         print(command(book1, *args))
 
