@@ -129,14 +129,14 @@ def change(book: AddressBook, contact: str, phone: str = None,):
 
 def change_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
+    old_note, new_note = text.split("... ")
     if text.startswith("#"):
-        record = HashTag(text)
-        new_note = input("введіть новий тег ")
+        record = HashTag(old_note)
         record_new = HashTag(new_note)
     else:
-        record = Note(text)
-        new_note = input("введіть новий зміст нотатки ")
+        record = quick_note(notebook, old_note)
         record_new = Note(new_note)
+        record_new.done = record.done
     if record in notebook.note_list or record in notebook.tag_list:
         notebook.change_tag(record, record_new)
         return f'"{record}" змінено на "{record_new}"'
@@ -145,7 +145,7 @@ def change_note(notebook: NotePad, *args):
 
 def change_note_stat(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
-    record = Note(text)
+    record = quick_note(notebook, text)
     if record in notebook.note_list:
         notebook.change_status(record)
         return f'Статус нотатки змінено на "виконано"'
@@ -157,7 +157,7 @@ def del_note(notebook: NotePad, *args):
     if text.startswith("#"):
         record = HashTag(text)
     else:
-        record = Note(text)
+        record = quick_note(notebook, text)
     if record in notebook.note_list or record in notebook.tag_list:
         notebook.delete(record)
         return f'"{record}" видалений успішно'
@@ -275,14 +275,14 @@ def search_note(notebook: NotePad, *args):
             return f'{note}' if text in str(note) else error
 
 
-def show_notes(notebook: NotePad):
+def show_notes(notebook: NotePad, *args):
     line = ''
     for note in notebook.note_list:
         line += f'дата створення: {note.day.strftime("%d-%m-%Y")}.Зміст: {str(note)}.Статус {note.done}'+'\n'
     return ("список нотатків\n"+line+"кінець списку нотаток")
 
 
-def show_tags(notebook: NotePad):
+def show_tags(notebook: NotePad, *args):
     line = ''
     for tag in notebook.tag_list:
         line += f'{str(tag)}'+'\n'
@@ -304,6 +304,14 @@ def exit(book: AddressBook, *args):
     return "До побачення"
 
 
+def quick_note(notebook: NotePad, text: str):
+    content = text.replace("...", "")
+    for note in notebook.note_list:
+        return note if content in str(note) else None
+    record = Note(content)
+    return record
+
+
 @ input_error
 def no_command(*args):
     return "Такої команди немає"
@@ -318,7 +326,7 @@ COMMANDS = {
     "add": add,
     "congrat": congrat,
     "change note": change_note,
-    "change note status": change_note_stat,
+    "change status": change_note_stat,
     "change": change,
     "phone": phone,
     "show all": show_all,
@@ -337,6 +345,15 @@ COMMANDS = {
     "exit": exit,
     "help": help,
 }
+WITH_NOTES = [
+    add_note,
+    change_note,
+    change_note_stat,
+    show_notes,
+    show_tags,
+    search_note,
+    del_note
+]
 
 
 @ input_error
@@ -361,7 +378,7 @@ def main():
     while not is_ended:
         s = input(">>>")
         command, args = command_parser(s)
-        print(command(book1, *args))
+        print(command((notebook if command in WITH_NOTES else book1), *args))
 
 
 if __name__ == "__main__":

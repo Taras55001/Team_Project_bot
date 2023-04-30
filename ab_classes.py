@@ -21,15 +21,14 @@ class Field:
 
 
 class Note:
-    def __init__(self, text, done=None):
+    def __init__(self, text, done=False):
         self.day = datetime.today()
         self.done = done
         self.done_date = None
         self.text = text
-        self.stat = False
 
     def __repr__(self) -> str:
-        return self.text
+        return str(self.text)
 
     def __eq__(self, other):
         return self.text == other.text
@@ -85,10 +84,9 @@ class NotePad:
             self.tag_list.append(new_note)
 
     def change_status(self, note):
-        i = self.note_list.index(note)
-        record = self.note_list[i]
-        record.stat = True
-        record.done_date = datetime.today()
+        for i in self.note_list:
+            i.done = True if note == i else None
+            i.done_date = datetime.today() if note == i else None
 
     def delete(self, note):
         if type(note) is Note:
