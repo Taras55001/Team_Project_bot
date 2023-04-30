@@ -44,16 +44,11 @@ def greet(*args):
 
 
 @input_error
-def add(book: AddressBook, contact: str, *params):
+def add(book: AddressBook, contact: str, phone:Phone, email:Email =None, *address):
     contact_new = Name(contact)
-    phone, email, address = None, None, None
-    for param in params:
-        if '@' in param:
-            email = Email(param)
-        elif param.startswith("+"):
-            phone = Phone(param)
-        else:
-            address = Address(" ".join(param))
+    phone = Phone(phone) if phone else None
+    email= Email(email) if email else None
+    address= Adress(" ".join(address)) if address else None
 
     rec_new = Record(contact_new, phone, email, address)
 

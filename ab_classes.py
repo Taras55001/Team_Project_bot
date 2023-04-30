@@ -108,9 +108,9 @@ class Record:
         self,
         name: Name,
         phone: Phone = None,
-        birthday: Birthday = None,
         email: Email = None,
         adress: Adress = None,
+        birthday: Birthday = None,
     ):
         self.name = name
         self.phones = []
