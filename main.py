@@ -44,23 +44,32 @@ def greet(*args):
 
 
 @input_error
-def add(book: AddressBook, contact: str, phone: str = None, email: str = None, address: str = None):
+def add(book: AddressBook, contact: str, *params):
     contact_new = Name(contact)
-    phone_new = Phone(phone) if phone else None
-    email_new = Email(email) if email else None
-    address_new = Adress(address) if address else None
-    rec_new = Record(contact_new, phone_new, email_new, address_new)
+    phone, email, address = None, None, None
+    for param in params:
+        if '@' in param:
+            email = Email(param)
+        elif param.startswith("+"):
+            phone = Phone(param)
+        else:
+            address = Address(" ".join(param))
+
+    rec_new = Record(contact_new, phone, email, address)
 
     if contact not in book.keys():
         book.add_record(rec_new)
         return f"Додано контакт '{contact}' з телефоном: {phone}, електронною поштою: {email} та адресою: {address}"
     else:
         rec = book.get(contact)
-        rec.add_phone(phone_new)
-        rec.add_email(email_new)
-        rec.add_address(address_new)
+        if phone:
+            rec.add_phone(phone)
+        if email:
+            rec.add_email(email)
+        if address:
+            rec.add_adress(address)
         return f"Для існуючого контакту '{contact}' додано номер телефону: {phone}, електронну пошту: {email} та адресу: {address}"
-
+    
 
 @input_error
 def add_adress(book: AddressBook, contact: str, *adress):
