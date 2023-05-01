@@ -46,27 +46,39 @@ def greet(*args):
     return "Вітаю, я Ваш персональний бот-помічник MemoMind 1.0.0. Чим можу допомогти?"
 
 
-@input_error
-def add_contact(book: AddressBook, contact: str, phone: Phone, email: Email = None, *address):
-    contact_new = Name(contact)
-    phone = Phone(phone) if phone else None
-    email = Email(email) if email else None
-    address = Address(" ".join(address)) if address else None
+def add_contact(book: AddressBook, contact: Name, *params):
+    @input_error
+    def inner_add_contact():
+        contact_new = Name(contact)
+        phone, email, address = None, None, []
+        phone_regex = r"^(\+?\d{1,3})? ?(\d{2,3}) ?(\d{2,3}) ?(\d{2}) ?(\d{2})$"
 
-    rec_new = Record(contact_new, phone, email, address)
+        for i, param in enumerate(params):
+            if "@" in param:
+                email = Email(param)
+            elif re.match(phone_regex, param):
+                phone = Phone(param)
+            else:
+                address.append(param)
 
-    if contact_new.value not in book.keys():
-        book.add_record(rec_new)
-        return f"Додано контакт '{contact}' з телефоном: {phone}, електронною поштою: {email} та адресою: {address}"
-    else:
-        rec = book.get(contact)
-        if phone:
-            rec.add_phone(phone)
-        if email:
-            rec.add_email(email)
-        if address:
-            rec.add_address(address)
-        return f"Для існуючого контакту '{contact}' додано номер телефону: {phone}, електронну пошту: {email} та адресу: {address}"
+        address_str = ", ".join(address)
+        address = Address(address_str) if address_str else None
+        rec_new = Record(contact_new, phone, email, address)
+
+        if contact_new.value not in book.keys():
+            book.add_record(rec_new)
+            return f"Додано контакт '{contact}' з телефоном: {phone}, електронною поштою: {email} та адресою: {address}"
+        else:
+            rec = book.get(contact)
+            if phone:
+                rec.add_phone(phone)
+            if email:
+                rec.add_email(email)
+            if address:
+                rec.add_address(address)
+            return f"Для існуючого контакту '{contact}' додано номер телефону: {phone}, електронну пошту: {email} та адресу: {address}"
+
+    return inner_add_contact()
 
 
 @input_error
