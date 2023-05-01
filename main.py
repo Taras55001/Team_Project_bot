@@ -149,29 +149,18 @@ def change_email(
     contact: str,
     email: str = None,
 ):
+    if contact not in book:
+        return f'Контакт "{contact}" відсутній в адресній книзі'
+
     rec = book.get(contact)
 
-    print(rec.show_emails())
-
-    if not rec.emails:
-        if not email:
-            email_new = Email(input("Якщо хочете додати e-mail введіть адресу:"))
-        else:
-            email_new = Email(email)
-        rec.add_email(email_new)
-        return f'Змінено e-mail на {email_new} для контакту "{contact}"'
-
+    if not email:
+        email_new = input("Якщо хочете змінити e-mail введіть нову адресу: ")
     else:
-        if len(rec.emails) == 1:
-            num = 1
-        if len(rec.emails) > 1:
-            num = int(input("Який ви хочете змінити (введіть індекс):"))
-        if not email:
-            email_new = Email(input("Будь ласка введіть новий e-mail:"))
-        else:
-            email_new = Email(email)
-        rec.change_email(num - 1, email_new)
-        return f'Змінено e-mail контакту "{contact}" на {email_new}'
+        email_new = email
+
+    rec.change_email(email_new)
+    return f'Змінено e-mail контакту "{contact}" на {email_new}'
 
 
 @ input_error
@@ -315,6 +304,8 @@ COMMANDS = {
     "change status": change_note_stat,
     "change": change,
     "change email": change_email,
+    # "change b_day": change_birthday,
+    # "change address": change_address,
     "phone": phone,
     "show all": show_all,
     "show notes": show_notes,

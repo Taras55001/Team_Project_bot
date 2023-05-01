@@ -257,6 +257,16 @@ class Record:
             for i, phone in enumerate(self.phones, 1):
                 output += f"{i}: {phone} "
             return output
+    
+    def change_email(self, email: str):
+        self.email = Email(email)
+
+    def show_email(self):
+        if not self.email:
+            return "В цього контакта немає e-mail"
+        else:
+            return f"Поточний e-mail {self.email}"
+
 
     def del_phone(self, num=1):
         if not self.phones:
