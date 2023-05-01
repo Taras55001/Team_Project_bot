@@ -146,7 +146,7 @@ class Record:
 
     def days_to_birthday(self) -> int:
         if not self.birthday:
-            return 1000000
+            return 0
         today = datetime.today()
         compare = self.birthday.value.replace(year=today.year)
         days = int((compare - today).days)

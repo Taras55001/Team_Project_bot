@@ -101,7 +101,7 @@ def congrat(book: AddressBook, days: int):
     output = ""
     for contact in book.values():
         if contact.days_to_birthday() <= int(days):
-            output += str(contact)
+            output += str(сontact)
     text = (
         f"день народження у наступних контактів:\n{output}"
         if output

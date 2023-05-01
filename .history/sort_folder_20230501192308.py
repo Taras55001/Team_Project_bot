@@ -8,8 +8,8 @@ import json
 CATEGORIES = {}
 found_files = {}
 
-known_types = set()
-unknown_types = set()
+known_types = []
+unknown_types = []
 deleted_folders = []
 
 
@@ -38,12 +38,12 @@ def scan_folder(path: Path):
             for name, types in CATEGORIES.items():
                 if ext in types:
                     found_files[name].append(item)
-                    known_types.add(ext)
+                    known_types.append(ext)
                     is_unknown = False
                     break
 
             if is_unknown:
-                unknown_types.add(ext)
+                unknown_types.append(ext)
 
         else:
             if item.name not in CATEGORIES.keys():
@@ -79,7 +79,7 @@ def unpack_files(target_path: Path):
         try:
             new_dir.mkdir()
             shutil.unpack_archive(file, new_dir)
-        except (FileExistsError, shutil.ReadError):
+        except FileExistsError, shutil.ReadError:
             pass
         try:
             file.unlink()  # delete unpacked archive
@@ -103,16 +103,16 @@ def del_empty_folders(path: Path):
 def normalize_all(path: Path):
     items = [x for x in path.iterdir()]
     for item in items:
-        if not item.is_file():
-            if item.name not in CATEGORIES.keys():
-                normalize_all(item)
-                new_name = item.parent / normalize(item.name)
-                item.rename(new_name)
-            else:
-                continue
-        else:
+        if item.is_file():
             new_name = item.parent / normalize(item.name)
             item.rename(new_name)
+        else:
+            if item.name not in CATEGORIES.keys():
+                new_name = item.parent / normalize(item.name)
+                item.rename(new_name)
+                normalize_all(item)
+            else:
+                continue
 
 
 def report_category(category: str, files_lst: list):
@@ -130,9 +130,10 @@ def main(work_path):
     if not path.exists():
         return "Вказаний шлях не існує"
 
-    normalize_all(path)
-
     scan_folder(path)
+
+    found_known = set(known_types)
+    found_unknown = set(unknown_types)
 
     # create folders only for found file types
     for category in found_files.keys():
@@ -147,8 +148,9 @@ def main(work_path):
 
     del_empty_folders(path)
 
-    output = f"""Знайдено файли відомих типів: {', '.join(f for f in known_types)}. Всього {len(known_types)} файлів.
-Знайдено файли невідомих типів: {', '.join(f for f in unknown_types)}. всього {len(unknown_types)} файлів.
+    normalize_all(path)
+    output = f"""Знайдено файли відомих типів: {', '.join(f for f in found_known)}. Dсього {len(known_types)} файлів.
+Знайдено файли невідомих типів: {', '.join(f for f in found_unknown)}. всього {len(unknown_types)} файлів.
 Видалено порожніх тек {len(deleted_folders)}"""
 
     return output

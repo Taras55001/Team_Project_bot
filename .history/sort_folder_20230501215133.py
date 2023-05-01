@@ -8,8 +8,8 @@ import json
 CATEGORIES = {}
 found_files = {}
 
-known_types = set()
-unknown_types = set()
+known_types = {}
+unknown_types = {}
 deleted_folders = []
 
 
@@ -101,18 +101,21 @@ def del_empty_folders(path: Path):
 
 
 def normalize_all(path: Path):
+    # try:
     items = [x for x in path.iterdir()]
+    # except FileNotFoundError:
+    # return None
     for item in items:
-        if not item.is_file():
-            if item.name not in CATEGORIES.keys():
-                normalize_all(item)
-                new_name = item.parent / normalize(item.name)
-                item.rename(new_name)
-            else:
-                continue
-        else:
+        if item.is_file():
             new_name = item.parent / normalize(item.name)
             item.rename(new_name)
+        else:
+            if item.name not in CATEGORIES.keys():
+                new_name = item.parent / normalize(item.name)
+                item.rename(new_name)
+                normalize_all(item)
+            else:
+                continue
 
 
 def report_category(category: str, files_lst: list):

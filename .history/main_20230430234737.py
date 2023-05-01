@@ -45,13 +45,11 @@ def greet(*args):
 
 
 @input_error
-def add_contact(
-    book: AddressBook, contact: str, phone: Phone, email: Email = None, *address
-):
+def add_contact(book: AddressBook, contact: str, phone:Phone, email:Email =None, *address):
     contact_new = Name(contact)
     phone = Phone(phone) if phone else None
-    email = Email(email) if email else None
-    address = Adress(" ".join(address)) if address else None
+    email= Email(email) if email else None
+    address= Adress(" ".join(address)) if address else None
 
     rec_new = Record(contact_new, phone, email, address)
 
@@ -67,7 +65,7 @@ def add_contact(
         if address:
             rec.add_adress(address)
         return f"Для існуючого контакту '{contact}' додано номер телефону: {phone}, електронну пошту: {email} та адресу: {address}"
-
+    
 
 @input_error
 def add_address(book: AddressBook, contact: str, *adress):
@@ -101,7 +99,7 @@ def congrat(book: AddressBook, days: int):
     output = ""
     for contact in book.values():
         if contact.days_to_birthday() <= int(days):
-            output += str(contact)
+            output += str(c ontact)
     text = (
         f"день народження у наступних контактів:\n{output}"
         if output
