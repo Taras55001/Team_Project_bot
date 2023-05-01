@@ -260,6 +260,7 @@ class Record:
     
     def change_email(self, email: str):
         self.email = Email(email)
+        
 
     def show_email(self):
         if not self.email:
