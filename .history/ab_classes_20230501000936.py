@@ -20,81 +20,6 @@ class Field:
         return self.value == other.value
 
 
-class Note:
-    def __init__(self, text, done=False):
-        self.day = datetime.today()
-        self.done = done
-        self.done_date = None
-        self.text = text
-
-    def __repr__(self) -> str:
-        return str(self.text)
-
-    def __eq__(self, other):
-        return self.text == other.text
-
-
-class HashTag:
-    def __init__(self, tag) -> None:
-        self.text = tag
-
-    def __repr__(self) -> str:
-        return self.text
-
-    def __eq__(self, other):
-        return self.text == other.text
-
-
-class NotePad:    
-    def load_from_file(self, note_file,tag_file):
-        try:
-            with open(note_file, "rb") as db:
-                self.note_list = pickle.load(db)
-        except EOFError:
-            pass
-        try:
-            with open(tag_file, "rb") as db:
-                self.tag_list = pickle.load(db)
-        except EOFError:
-            pass
-
-    def save_to_file(self,note_file,tag_file):
-        with open(note_file, "wb") as db:
-            pickle.dump(self.note_list, db)
-        with open(tag_file, "wb") as db:
-            pickle.dump(self.tag_list, db)
-        
-    note_list = []
-    tag_list = []
-
-    def add_tag(self, note):
-        if type(note) is Note:
-            if note not in self.note_list:
-                self.note_list.append(note)
-        else:
-            if note not in self.tag_list:
-                self.tag_list.append(note)
-
-    def change_tag(self, note, new_note):
-        if type(note) is Note:
-            self.note_list.remove(note)
-            self.note_list.append(new_note)
-        else:
-            self.tag_list.remove(note)
-            self.tag_list.append(new_note)
-
-    def change_status(self, note):
-        for i in self.note_list:
-            i.done = True if note == i else None
-            i.done_date = datetime.today() if note == i else None
-
-    def delete(self, note):
-        if type(note) is Note:
-            self.note_list.remove(note)
-        else:
-            self.tag_list.remove(note)
-
-
 class Name(Field):
     @property
     def value(self):
@@ -139,8 +64,7 @@ class Email(Field):
     @value.setter
     def value(self, value):
         pattern = (
-            # Email validation
-            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"  # Email validation
         )
         if re.match(pattern, value):
             self.__value = value
@@ -148,7 +72,7 @@ class Email(Field):
             raise ValueError("Невірний формат e-mail")
 
 
-class Address(Field):
+class Adress(Field):
     @property
     def value(self):
         return self.__value
@@ -189,7 +113,7 @@ class Record:
         name: Name,
         phone: Phone = None,
         email: Email = None,
-        adress: Address = None,
+        adress: Adress = None,
         birthday: Birthday = None,
     ):
         self.name = name
@@ -222,7 +146,7 @@ class Record:
 
     def days_to_birthday(self) -> int:
         if not self.birthday:
-            return 1000000
+            return 0
         today = datetime.today()
         compare = self.birthday.value.replace(year=today.year)
         days = int((compare - today).days)
@@ -243,12 +167,6 @@ class Record:
             raise IndexError("Цей номер телефону вже існує")
         self.phones.append(phone)
 
-    def add_adress(self, adres: Address):
-        if not self.adress:
-            self.adress = adres
-        else:
-            raise IndexError("День народження вже введений")
-        
     def add_birthday(self, birthday: Birthday):
         if not self.birthday:
             self.birthday = birthday
@@ -265,32 +183,7 @@ class Record:
             for i, phone in enumerate(self.phones, 1):
                 output += f"{i}: {phone} "
             return output
-    
-    def change_email(self, email: str):
-        self.email = Email(email)
 
-    def show_email(self):
-        if not self.email:
-            return "В цього контакта немає e-mail"
-        else:
-            return f"Поточний e-mail {self.email}"
-    
-    def change_birthday(self, new_birthday: Birthday):
-        if not self.birthday:
-            raise IndexError("Дата народження ще не введена")
-        self.birthday = new_birthday
-
-    
-    def change_address(self, new_address: Address):
-        if not self.adress:
-            self.adress = new_address
-            return f"Додано адресу {new_address}"
-        else:
-            old_address = self.adress
-            self.adress = new_address
-            return f"Змінено адресу з {old_address} на {new_address}"
-
-     
     def del_phone(self, num=1):
         if not self.phones:
             raise IndexError("В цього контакта не має збережених телефонів")
