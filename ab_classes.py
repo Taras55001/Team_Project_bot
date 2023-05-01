@@ -21,18 +21,23 @@ class Field:
 
 
 class Note:
-    def __init__(self, text, done=False):
+    def __init__(self, text,tag=None, done=False):
         self.day = datetime.today()
         self.done = done
         self.done_date = None
         self.text = text
+        self.tag_list = [tag] if tag else []
+    
+    def add_tag(self,tag):
+        if tag not in self.tag_list:
+            self.tag_list.append(tag)
+            self.tag_list.sort()
 
     def __repr__(self) -> str:
         return str(self.text)
 
     def __eq__(self, other):
         return self.text == other.text
-
 
 class HashTag:
     def __init__(self, tag) -> None:
@@ -43,6 +48,9 @@ class HashTag:
 
     def __eq__(self, other):
         return self.text == other.text
+
+    def __lt__(self, other):
+        return self.text < other.text
 
 
 class NotePad:    
@@ -65,34 +73,30 @@ class NotePad:
             pickle.dump(self.tag_list, db)
         
     note_list = []
-    tag_list = []
 
-    def add_tag(self, note):
-        if type(note) is Note:
-            if note not in self.note_list:
-                self.note_list.append(note)
-        else:
-            if note not in self.tag_list:
-                self.tag_list.append(note)
+    def add_note(self, note):
+        i = 0
+        for rec in self.note_list:
+            if len(note.tag_list)<= len(rec.tag_list):
+                i = self.note_list.index(rec) + 1
+        self.note_list.insert(i, note)
 
-    def change_tag(self, note, new_note):
-        if type(note) is Note:
-            self.note_list.remove(note)
-            self.note_list.append(new_note)
-        else:
-            self.tag_list.remove(note)
-            self.tag_list.append(new_note)
+    def change_note(self, note, new_note):
+        for rec in self.note_list:
+            if str(note) == str(rec):
+                rec.text = new_note
 
     def change_status(self, note):
-        for i in self.note_list:
-            i.done = True if note == i else None
-            i.done_date = datetime.today() if note == i else None
+        for rec in self.note_list:
+            if note == rec:
+                rec.done = True
+                rec.done_date = datetime.today().date()
 
     def delete(self, note):
-        if type(note) is Note:
-            self.note_list.remove(note)
-        else:
-            self.tag_list.remove(note)
+        self.note_list.remove(note)
+    
+    def sorting(self):
+        self.note_list.sort(key=lambda note: len(note.tag_list), reverse=True)
 
 
 class Name(Field):

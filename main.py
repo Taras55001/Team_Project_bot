@@ -1,7 +1,7 @@
 from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook, Adres, NotePad
 from functools import wraps
 from pathlib import Path
-from notebook import WITH_NOTES, add_note ,change_note, change_note_stat, show_notes, show_tags, search_note, del_note
+from notebook import WITH_NOTES, add_note ,add_tag ,change_note, change_note_stat, show_notes, search_note, del_note
 import re
 
 
@@ -38,12 +38,10 @@ def input_error(func):
     return wrapper
 
 
-@input_error
 def greet(*args):
     return "Вітаню, чим можу допомогти?"
 
 
-@input_error
 def add(book: AddressBook, contact: str, phone: str = None):
     contact_new = Name(contact)
     phone_new = Phone(phone) if phone else None
@@ -57,7 +55,6 @@ def add(book: AddressBook, contact: str, phone: str = None):
         return f'Для існуючого контакту "{contact}" додано номер телефону: {phone}'
 
 
-@input_error
 def add_adres(book: AddressBook, contact: str, *adres):
     x = ' '.join(adres)
     adres_new = Adres(x)
@@ -66,7 +63,6 @@ def add_adres(book: AddressBook, contact: str, *adres):
     return f'Updated existing contact "{contact}" with new adres: {x}'
 
 
-@input_error
 def add_email(book: AddressBook, contact: str, email: str):
     email_new = Email(email)
     rec = book.get(contact)
@@ -74,7 +70,6 @@ def add_email(book: AddressBook, contact: str, email: str):
     return f'Для існуючого контакту "{contact}" додано e-mail: {email}'
 
 
-@input_error
 def add_birthday(book: AddressBook, contact: str, birthday: str):
     b_day = Birthday(birthday)
     rec = book.get(contact)
@@ -82,14 +77,12 @@ def add_birthday(book: AddressBook, contact: str, birthday: str):
     return f'Для існуючого контакту "{contact}" додано день народження: {b_day}'
 
 
-@ input_error
 def congrat(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
     return rec.days_to_birthday()
 
 
-@ input_error
 def change(book: AddressBook, contact: str, phone: str = None,):
     rec = book.get(contact)
 
@@ -119,7 +112,6 @@ def change(book: AddressBook, contact: str, phone: str = None,):
 
 
 
-@ input_error
 def del_phone(book: AddressBook, contact: str, phone=None):
     rec = book.get(contact)
 
@@ -144,7 +136,6 @@ def del_phone(book: AddressBook, contact: str, phone=None):
     return f"Телефон {rec.del_phone(num)} видалено!"
 
 
-@ input_error
 def del_email(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -152,7 +143,6 @@ def del_email(book: AddressBook, *args):
     return f"Контакт {contact}, e-mail видалено"
 
 
-@ input_error
 def del_contact(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -164,7 +154,6 @@ def del_contact(book: AddressBook, *args):
     return f"Контакт {book.remove_record(contact)} Видалено!"
 
 
-@ input_error
 def del_birthday(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -172,7 +161,6 @@ def del_birthday(book: AddressBook, *args):
     return f"Контакт {contact}, день народження видалений"
 
 
-@ input_error
 def del_adres(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -180,14 +168,12 @@ def del_adres(book: AddressBook, *args):
     return f"Contact {contact}, adres deleted"
 
 
-@ input_error
 def phone(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
     return f'Контакт "{contact}". {rec.show_phones()}'
 
 
-@ input_error
 def show_all(book: AddressBook, *args):
     if len(book) < PAGE:
         return book.show_all()
@@ -199,7 +185,6 @@ def show_all(book: AddressBook, *args):
             input("Нажміть будь-яку клавішу")
 
 
-@ input_error
 def search(book: AddressBook, *args):
     pattern = " ".join(args)
     if len(pattern) < 3:
@@ -220,14 +205,12 @@ def search(book: AddressBook, *args):
 
 
 
-@ input_error
 def help(*args):
     with open("README.md", "rb") as help_file:
         output = help_file.read().decode("utf-8")
         return output
 
 
-@ input_error
 def exit(book: AddressBook, notebook: NotePad, *args):
     global is_ended
     is_ended = True
@@ -236,7 +219,6 @@ def exit(book: AddressBook, notebook: NotePad, *args):
     return "До побачення"
 
 
-@ input_error
 def no_command(*args):
     return "Такої команди немає"
 
@@ -247,6 +229,7 @@ COMMANDS = {
     "add b_day": add_birthday,
     "add address": add_adres,
     "add note": add_note,
+    "add tag":add_tag,
     "add": add,
     "congrat": congrat,
     "change note": change_note,
@@ -255,7 +238,6 @@ COMMANDS = {
     "phone": phone,
     "show all": show_all,
     "show notes": show_notes,
-    "show tags": show_tags,
     "search note": search_note,
     "search": search,
     "del note": del_note,
@@ -272,7 +254,6 @@ COMMANDS = {
 
 
 
-@ input_error
 def command_parser(line: str):
     line_prep = " ".join(line.split())
     for k, v in COMMANDS.items():
@@ -284,7 +265,7 @@ def command_parser(line: str):
 
 is_ended = False
 
-
+# @ input_error
 def main():
     book1 = AddressBook()
     notebook = NotePad()
@@ -294,8 +275,12 @@ def main():
 
     while not is_ended:
         s = input(">>>")
+        from test_func import test
+        test()
         command, args = command_parser(s)
         print(command((notebook if command in WITH_NOTES else book1), *args))
+        
+
 
 
 if __name__ == "__main__":
