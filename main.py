@@ -162,6 +162,37 @@ def change_email(
     rec.change_email(email_new)
     return f'Змінено e-mail контакту "{contact}" на {email_new}'
 
+  
+@input_error
+def change_birthday(book: AddressBook, contact: str, birthday: str):
+    rec = book.get(contact)
+    new_birthday = Birthday(birthday)
+    rec.change_birthday(new_birthday)
+    return f'Змінено дату народження на {new_birthday} для контакту "{contact}"'
+
+
+@input_error
+def change_address(book: AddressBook, contact: str, *address):
+    x = " ".join(address)
+    address_new = Address(x)
+    rec = book.get(contact)
+
+    if not rec.adress:
+        if not x:
+            address_new = Address(input("Якщо хочете додати адресу, введіть її:"))
+        else:
+            address_new = Address(x)
+        rec.add_address(address_new)
+        return f'Додано адресу {address_new} для контакту "{contact}"'
+    else:
+        if not x:
+            address_new = Address(input("Будь ласка, введіть нову адресу:"))
+        else:
+            address_new = Address(x)
+        old_address = rec.adress
+        rec.change_address(address_new)
+        return f'Змінено адресу {old_address} на {address_new} для контакту "{contact}"'
+
 
 @ input_error
 def del_phone(book: AddressBook, contact: str, phone=None):
@@ -302,10 +333,10 @@ COMMANDS = {
     "congrat": congrat,
     "change note": change_note,
     "change status": change_note_stat,
-    "change": change,
+    "change address": change_address,
+    "change b_day": change_birthday,
     "change email": change_email,
-    # "change b_day": change_birthday,
-    # "change address": change_address,
+    "change": change,
     "phone": phone,
     "show all": show_all,
     "show notes": show_notes,

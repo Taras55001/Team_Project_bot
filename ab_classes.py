@@ -260,14 +260,29 @@ class Record:
     
     def change_email(self, email: str):
         self.email = Email(email)
-
+    
     def show_email(self):
         if not self.email:
             return "В цього контакта немає e-mail"
         else:
             return f"Поточний e-mail {self.email}"
+    
+    def change_birthday(self, new_birthday: Birthday):
+        if not self.birthday:
+            raise IndexError("Дата народження ще не введена")
+        self.birthday = new_birthday
 
+    
+    def change_address(self, new_address: Address):
+        if not self.adress:
+            self.adress = new_address
+            return f"Додано адресу {new_address}"
+        else:
+            old_address = self.adress
+            self.adress = new_address
+            return f"Змінено адресу з {old_address} на {new_address}"
 
+     
     def del_phone(self, num=1):
         if not self.phones:
             raise IndexError("В цього контакта не має збережених телефонів")
