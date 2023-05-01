@@ -337,6 +337,8 @@ COMMANDS = {
     "change b_day": change_birthday,
     "change email": change_email,
     "change": change,
+    "change email": change_email,
+    "change": change,
     "phone": phone,
     "show all": show_all,
     "show notes": show_notes,
