@@ -143,6 +143,36 @@ def change(
         return f'Змінено номер телефону {old_phone} на {phone_new} для контакту "{contact}"'
 
 
+@input_error
+def change_email(
+    book: AddressBook,
+    contact: str,
+    email: str = None,
+):
+    rec = book.get(contact)
+
+    print(rec.show_emails())
+
+    if not rec.emails:
+        if not email:
+            email_new = Email(input("Якщо хочете додати e-mail введіть адресу:"))
+        else:
+            email_new = Email(email)
+        rec.add_email(email_new)
+        return f'Змінено e-mail на {email_new} для контакту "{contact}"'
+
+    else:
+        if len(rec.emails) == 1:
+            num = 1
+        if len(rec.emails) > 1:
+            num = int(input("Який ви хочете змінити (введіть індекс):"))
+        if not email:
+            email_new = Email(input("Будь ласка введіть новий e-mail:"))
+        else:
+            email_new = Email(email)
+        rec.change_email(num - 1, email_new)
+        return f'Змінено e-mail контакту "{contact}" на {email_new}'
+
 
 @ input_error
 def del_phone(book: AddressBook, contact: str, phone=None):
@@ -284,6 +314,7 @@ COMMANDS = {
     "change note": change_note,
     "change status": change_note_stat,
     "change": change,
+    "change email": change_email,
     "phone": phone,
     "show all": show_all,
     "show notes": show_notes,
