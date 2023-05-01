@@ -42,7 +42,7 @@ def input_error(func):
 
 @input_error
 def greet(*args):
-    return "Вітаню, чим можу допомогти?"
+    return "Вітаю, чим можу допомогти?"
 
 
 @input_error
