@@ -41,5 +41,7 @@
         ]
     },
     "PhoneBookFile": "phonebook.bin",
-    "NoteBookFile": "Notebook.bin"
+    "NoteBookFile": "Note.bin",
+    "TagBookFile": "Tag.bin"
+
 }
