@@ -292,7 +292,7 @@ def search(book: AddressBook, *args):
         highlighted += fragment
         if i < len(frags) - 1:
             highlighted += "\033[42m" + pattern + "\033[0m"
-    return f"Found {len(result)} match(es):\n" + highlighted
+    return f"Знайдено {len(result)} Збігів:\n" + highlighted
 
 
 @input_error
@@ -328,15 +328,12 @@ COMMANDS = {
     "add b_day": add_birthday,
     "add address": add_address,
     "add contact": add_contact,
-    "add address": add_address,
     "add note": add_note,
     "congrat": congrat,
     "change note": change_note,
     "change status": change_note_stat,
     "change address": change_address,
     "change b_day": change_birthday,
-    "change email": change_email,
-    "change": change,
     "change email": change_email,
     "change": change,
     "phone": phone,
