@@ -235,7 +235,7 @@ def del_contact(book: AddressBook, *args):
         raise AttributeError
     ans = None
     while ans != "y":
-        ans = input(f"Are you sure to delete contact {contact}? (Y/N)").lower()
+        ans = input(f"Ви впевнені що хочете видалити контакт {contact}? (Y/N)").lower()
     return f"Контакт {book.remove_record(contact)} Видалено!"
 
 
@@ -292,7 +292,7 @@ def search(book: AddressBook, *args):
         highlighted += fragment
         if i < len(frags) - 1:
             highlighted += "\033[42m" + pattern + "\033[0m"
-    return f"Знайдено {len(result)} Збігів:\n" + highlighted
+    return f"Знайдено {len(result)} збігів:\n" + highlighted
 
 
 @input_error
