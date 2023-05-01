@@ -241,6 +241,12 @@ class Record:
             raise IndexError("Цей номер телефону вже існує")
         self.phones.append(phone)
 
+    def add_adress(self, adres: Address):
+        if not self.adress:
+            self.adress = adres
+        else:
+            raise IndexError("День народження вже введений")
+        
     def add_birthday(self, birthday: Birthday):
         if not self.birthday:
             self.birthday = birthday
