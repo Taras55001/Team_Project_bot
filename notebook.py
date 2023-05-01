@@ -17,9 +17,12 @@ def change_note(notebook: NotePad, *args):
         record = HashTag(old_note)
         record_new = HashTag(new_note)
     else:
-        record = quick_note(notebook, old_note)
-        record_new = Note(new_note)
-        record_new.done = record.done
+        try:
+            record = quick_note(notebook, old_note)
+            record_new = Note(new_note)
+            record_new.done = record.done
+        except AttributeError:
+            return "Ви вели невірно запис, спробуйте й ще раз"
     if record in notebook.note_list or record in notebook.tag_list:
         notebook.change_tag(record, record_new)
         return f'"{record}" змінено на "{record_new}"'
@@ -84,5 +87,5 @@ WITH_NOTES = [
     show_notes,
     show_tags,
     search_note,
-    del_note
+    del_note,
     ]

@@ -295,7 +295,10 @@ def main():
     while not is_ended:
         s = input(">>>")
         command, args = command_parser(s)
-        print(command((notebook if command in WITH_NOTES else book1), *args))
+        if command == exit:
+            print(command(book1, notebook),*args)
+        else:
+            print(command((notebook if command in WITH_NOTES else book1), *args))
 
 
 if __name__ == "__main__":
