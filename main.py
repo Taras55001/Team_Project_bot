@@ -2,6 +2,7 @@ from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook, Adress
 from functools import wraps
 import json
 from pathlib import Path
+import pyttsx3
 import re
 import sort_folder
 
@@ -247,6 +248,17 @@ def sort_targ_folder(book: AddressBook, *args):
     target_path = " ".join(args)
     return sort_folder.main(target_path)
 
+def voice(content):
+    engine = pyttsx3.init()
+    voices = engine.getProperty('voices')
+    engine.setProperty('voice', voices[0].id)
+    # index-> 0 -- Microsoft Irina Desktop - Russian
+    # index-> 1 -- Microsoft Zira Desktop - English (United States)
+    # index-> 2 -- Microsoft Paulina Desktop - Polish
+    # index-> 3 -- Microsoft David Desktop - English (United States)
+    engine.say(content)
+    engine.runAndWait()
+    return content
 
 @input_error
 def help(*args):
@@ -320,8 +332,8 @@ def main():
         s = input(">>>")
 
         command, args = command_parser(s)
-        print(command(book1, *args))
-
+        print(voice(command(book1, *args)))
+        
 
 if __name__ == "__main__":
     main()
