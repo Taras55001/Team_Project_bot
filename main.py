@@ -42,7 +42,7 @@ def input_error(func):
 
 @input_error
 def greet(*args):
-    return "Вітаю, чим можу допомогти?"
+    return "Вітаю, я Ваш персональний бот-помічник MemoMind 1.0.0. Чим можу допомогти?"
 
 
 @input_error
