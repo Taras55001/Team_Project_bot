@@ -20,6 +20,81 @@ class Field:
         return self.value == other.value
 
 
+class Note:
+    def __init__(self, text, done=False):
+        self.day = datetime.today()
+        self.done = done
+        self.done_date = None
+        self.text = text
+
+    def __repr__(self) -> str:
+        return str(self.text)
+
+    def __eq__(self, other):
+        return self.text == other.text
+
+
+class HashTag:
+    def __init__(self, tag) -> None:
+        self.text = tag
+
+    def __repr__(self) -> str:
+        return self.text
+
+    def __eq__(self, other):
+        return self.text == other.text
+
+
+class NotePad:    
+    def load_from_file(self, note_file,tag_file):
+        try:
+            with open(note_file, "rb") as db:
+                self.note_list = pickle.load(db)
+        except EOFError:
+            pass
+        try:
+            with open(tag_file, "rb") as db:
+                self.tag_list = pickle.load(db)
+        except EOFError:
+            pass
+
+    def save_to_file(self,note_file,tag_file):
+        with open(note_file, "wb") as db:
+            pickle.dump(self.note_list, db)
+        with open(tag_file, "wb") as db:
+            pickle.dump(self.tag_list, db)
+        
+    note_list = []
+    tag_list = []
+
+    def add_tag(self, note):
+        if type(note) is Note:
+            if note not in self.note_list:
+                self.note_list.append(note)
+        else:
+            if note not in self.tag_list:
+                self.tag_list.append(note)
+
+    def change_tag(self, note, new_note):
+        if type(note) is Note:
+            self.note_list.remove(note)
+            self.note_list.append(new_note)
+        else:
+            self.tag_list.remove(note)
+            self.tag_list.append(new_note)
+
+    def change_status(self, note):
+        for i in self.note_list:
+            i.done = True if note == i else None
+            i.done_date = datetime.today() if note == i else None
+
+    def delete(self, note):
+        if type(note) is Note:
+            self.note_list.remove(note)
+        else:
+            self.tag_list.remove(note)
+
+
 class Name(Field):
     @property
     def value(self):
@@ -64,7 +139,8 @@ class Email(Field):
     @value.setter
     def value(self, value):
         pattern = (
-            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"  # Email validation
+            # Email validation
+            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         )
         if re.match(pattern, value):
             self.__value = value
@@ -72,7 +148,7 @@ class Email(Field):
             raise ValueError("Невірний формат e-mail")
 
 
-class Adress(Field):
+class Address(Field):
     @property
     def value(self):
         return self.__value
@@ -113,7 +189,7 @@ class Record:
         name: Name,
         phone: Phone = None,
         email: Email = None,
-        adress: Adress = None,
+        adress: Address = None,
         birthday: Birthday = None,
     ):
         self.name = name

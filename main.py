@@ -1,7 +1,8 @@
-from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook, Adress
+from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook, Address, NotePad
 from functools import wraps
 import json
 from pathlib import Path
+from notebook import WITH_NOTES, add_note ,change_note, change_note_stat, show_notes, show_tags, search_note, del_note
 import re
 import sort_folder
 
@@ -49,7 +50,7 @@ def add_contact(book: AddressBook, contact: str, phone:Phone, email:Email =None,
     contact_new = Name(contact)
     phone = Phone(phone) if phone else None
     email= Email(email) if email else None
-    address= Adress(" ".join(address)) if address else None
+    address= Address(" ".join(address)) if address else None
 
     rec_new = Record(contact_new, phone, email, address)
 
@@ -68,12 +69,13 @@ def add_contact(book: AddressBook, contact: str, phone:Phone, email:Email =None,
     
 
 @input_error
-def add_address(book: AddressBook, contact: str, *adress):
-    x = " ".join(adress)
-    adress_new = Adress(x)
+def add_address(book: AddressBook, contact: str, *adres):
+    x = ' '.join(adres)
+    address_new = Address(x)
     rec = book.get(contact)
-    rec.add_adress(adress_new)
+    rec.add_adress(address_new)
     return f'Для існуючого контакту "{contact}" додано адресу: {x}'
+
 
 
 @input_error
@@ -120,7 +122,8 @@ def change(
 
     if not rec.phones:
         if not phone:
-            phone_new = Phone(input("Якщо хочете додати телефон введіть номер:"))
+            phone_new = Phone(
+                input("Якщо хочете додати телефон введіть номер:"))
         else:
             phone_new = Phone(phone)
         rec.add_phone(phone_new)
@@ -140,7 +143,8 @@ def change(
         return f'Змінено номер телефону {old_phone} на {phone_new} для контакту "{contact}"'
 
 
-@input_error
+
+@ input_error
 def del_phone(book: AddressBook, contact: str, phone=None):
     rec = book.get(contact)
 
@@ -165,7 +169,7 @@ def del_phone(book: AddressBook, contact: str, phone=None):
     return f"Телефон {rec.del_phone(num)} видалено!"
 
 
-@input_error
+@ input_error
 def del_email(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -173,7 +177,7 @@ def del_email(book: AddressBook, *args):
     return f"Контакт {contact}, e-mail видалено"
 
 
-@input_error
+@ input_error
 def del_contact(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -185,7 +189,7 @@ def del_contact(book: AddressBook, *args):
     return f"Контакт {book.remove_record(contact)} Видалено!"
 
 
-@input_error
+@ input_error
 def del_birthday(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -194,21 +198,20 @@ def del_birthday(book: AddressBook, *args):
 
 
 @input_error
-def del_adress(book: AddressBook, *args):
+def del_address(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
     rec.adress = None
     return f"Контакт {contact}, адреса видалена"
 
-
-@input_error
+@ input_error
 def phone(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
     return f'Контакт "{contact}". {rec.show_phones()}'
 
 
-@input_error
+@ input_error
 def show_all(book: AddressBook, *args):
     if len(book) <= PAGE:
         return book.show_all()
@@ -222,7 +225,7 @@ def show_all(book: AddressBook, *args):
         return f"Всього: {x} контактів."
 
 
-@input_error
+@ input_error
 def search(book: AddressBook, *args):
     pattern = " ".join(args)
     if len(pattern) < 3:
@@ -255,15 +258,16 @@ def help(*args):
         return output
 
 
-@input_error
-def exit(book: AddressBook, *args):
+@ input_error
+def exit(book: AddressBook, notebook: NotePad, *args):
     global is_ended
     is_ended = True
     book.save_to_file(db_file_name)
+    notebook.save_to_file(not_file_name,tag_file_name)
     return "До побачення"
 
 
-@input_error
+@ input_error
 def no_command(*args):
     return "Такої команди немає"
 
@@ -274,12 +278,20 @@ COMMANDS = {
     "add b_day": add_birthday,
     "add address": add_address,
     "add contact": add_contact,
+    "add address": add_address,
+    "add note": add_note,
     "congrat": congrat,
+    "change note": change_note,
+    "change status": change_note_stat,
     "change": change,
     "phone": phone,
     "show all": show_all,
+    "show notes": show_notes,
+    "show tags": show_tags,
+    "search note": search_note,
     "search": search,
-    "del adress": del_adress,
+    "del note": del_note,
+    "del address": del_address,
     "del phone": del_phone,
     "del b_day": del_birthday,
     "del email": del_email,
@@ -292,7 +304,8 @@ COMMANDS = {
 }
 
 
-@input_error
+
+@ input_error
 def command_parser(line: str):
     line_prep = " ".join(line.split())
     for k, v in COMMANDS.items():
@@ -306,21 +319,26 @@ is_ended = False
 
 def main():
     book1 = AddressBook()
-    global db_file_name
+    notebook=NotePad()
+    global db_file_name, not_file_name,tag_file_name
     with open("config.JSON") as cfg:
         cfg_data = json.load(cfg)
         db_file_name = cfg_data["PhoneBookFile"]
+        not_file_name=cfg_data["NoteBookFile"]
+        tag_file_name=cfg_data["TagBookFile"]
 
     if Path(db_file_name).exists():
         book1.load_from_file(db_file_name)
-
+        notebook.load_from_file(not_file_name,tag_file_name)
     print("Добрий день!", f"доступні команди: {', '.join(k for k in COMMANDS.keys())}")
 
     while not is_ended:
         s = input(">>>")
-
         command, args = command_parser(s)
-        print(command(book1, *args))
+        if command == exit:
+            print(command(book1, notebook),*args)
+        else:
+            print(command((notebook if command in WITH_NOTES else book1), *args))
 
 
 if __name__ == "__main__":
