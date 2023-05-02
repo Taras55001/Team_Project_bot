@@ -113,15 +113,15 @@ class Name(Field):
 class Birthday(Field):
     @property
     def value(self):
-        return self.__value
+        return self.value
 
     @value.setter
     def value(self, value):
         try:
-            self.__value = datetime.strptime(value, "%d.%m.%Y")  # Date validaiton "."
+            self.value = datetime.strptime(value, "%d.%m.%Y")  # Date validaiton "."
         except ValueError:
             try:
-                self.__value = datetime.strptime(
+                self.value = datetime.strptime(
                     value, "%d/%m/%Y"
                 )  # Date validaiton "/"
             except ValueError:

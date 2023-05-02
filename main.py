@@ -89,14 +89,14 @@ def add_address(book: AddressBook, contact: str, *adres):
     return f'Для існуючого контакту "{contact}" додано адресу: {x}'
 
 
-
+@input_error
 def add_email(book: AddressBook, contact: str, email: str):
     email_new = Email(email)
     rec = book.get(contact)
     rec.add_email(email_new)
     return f'Для існуючого контакту "{contact}" додано e-mail: {email}'
 
-
+@input_error
 def add_birthday(book: AddressBook, contact: str, birthday: str):
     b_day = Birthday(birthday)
     rec = book.get(contact)
@@ -203,7 +203,7 @@ def change_address(book: AddressBook, contact: str, *address):
         rec.change_address(address_new)
         return f'Змінено адресу {old_address} на {address_new} для контакту "{contact}"'
 
-
+@input_error
 def del_phone(book: AddressBook, contact: str, phone=None):
     rec = book.get(contact)
 
@@ -227,14 +227,14 @@ def del_phone(book: AddressBook, contact: str, phone=None):
             num = int(input("який ви хочете видалити (введіть індекс):"))
     return f"Телефон {rec.del_phone(num)} видалено!"
 
-
+@input_error
 def del_email(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
     rec.email = None
     return f"Контакт {contact}, e-mail видалено"
 
-
+@input_error
 def del_contact(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -245,7 +245,7 @@ def del_contact(book: AddressBook, *args):
         ans = input(voice(f"Ви впевнені що хочете видалити контакт {contact}? (Y/N)")).lower()
     return f"Контакт {book.remove_record(contact)} Видалено!"
 
-
+@input_error
 def del_birthday(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -295,7 +295,7 @@ def show_all(book: AddressBook, *args):
         x = book.lening()
         return f"Всього: {x} контактів."
 
-
+@input_error
 def search(book: AddressBook, *args):
     pattern = " ".join(args)
     if len(pattern) < 3:
@@ -332,7 +332,7 @@ def voice(content, *yes):
     engine.runAndWait()
     return content
 
-@input_error
+
 def help(*args):
     with open("README.md", "rb") as help_file:
         output = help_file.read().decode("utf-8")
@@ -348,7 +348,14 @@ def exit(book: AddressBook, notebook: NotePad, *args):
 
 def no_command(*args):
     return "Такої команди немає"
-
+def off_sound(book,*arg):
+    global sound
+    sound=False
+    return "Звук виключен"
+def on_sound(book,*arg):
+    global sound
+    sound=True
+    return "Звук включен"
 
 COMMANDS = {
     "hello": greet,
@@ -364,7 +371,9 @@ COMMANDS = {
     "change address": change_address,
     "change b_day": change_birthday,
     "change email": change_email,
-    "change": change,
+    "change phone": change,
+    "off sound": off_sound,
+    "on sound": on_sound,
     "phone": phone,
     "show all": show_all,
     "show notes": show_notes,
@@ -394,7 +403,7 @@ def command_parser(line: str):
 
 
 is_ended = False
-
+sound=True
 # @ input_error
 def main():
     book1 = AddressBook()
@@ -406,10 +415,16 @@ def main():
         load_data(book1, notebook)
         s = input(">>>")
         command, args = command_parser(s)
-        if command == exit:
-            print(command(book1, notebook),*args)
+        if sound:
+            if command == exit:
+                print(command(book1, notebook),*args)
+            else:
+                print(voice(command((notebook if command in WITH_NOTES else book1), *args)))
         else:
-            print(voice(command((notebook if command in WITH_NOTES else book1), *args)))
+            if command == exit:
+                print(command(book1, notebook),*args)
+            else:
+                print(command((notebook if command in WITH_NOTES else book1), *args))
         save_data(book1, notebook)
 
         
