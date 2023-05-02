@@ -204,26 +204,8 @@ def change_address(book: AddressBook, contact: str, *address):
 @input_error
 def del_phone(book: AddressBook, contact: str, phone=None):
     rec = book.get(contact)
-
-    if phone:
-        for i, p in enumerate(rec.phones):
-            if p == phone:
-                num = i + 1
-        else:
-            raise ValueError("Цей контакт не має такого номеру телефону")
-    else:
-        print(rec.show_phones())
-        if len(rec.phones) == 1:
-            num = 1
-            ans = None
-            while ans != "y":
-                ans = input(
-                    voice(f"Контакт {rec.name} має тільки 1 телефон {rec.phones[0]}.\
-                        Ви впевнені? (Y/N)")
-                ).lower()
-        else:
-            num = int(input("який ви хочете видалити (введіть індекс):"))
-    return f"Телефон {rec.del_phone(num)} видалено!"
+    rec.del_phone()
+    return f"Контакт {contact}, телефон видалено"
 
 @input_error
 def del_email(book: AddressBook, *args):
@@ -240,7 +222,7 @@ def del_contact(book: AddressBook, *args):
         raise AttributeError
     ans = None
     while ans != "y":
-        ans = input(voice(f"Ви впевнені що хочете видалити контакт {contact}? (Y/N)")).lower()
+        ans = input(f"Ви впевнені що хочете видалити контакт {contact}? (Y/N)").lower()
     return f"Контакт {book.remove_record(contact)} Видалено!"
 
 @input_error
@@ -411,6 +393,8 @@ def main():
         command, args = command_parser(s)
         if sound:
             if command == exit:
+                print(command(book1, notebook),*args)
+            elif command == help:
                 print(command(book1, notebook),*args)
             else:
                 print(voice(command((notebook if command in WITH_NOTES else book1), *args)))
