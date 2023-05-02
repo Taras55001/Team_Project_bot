@@ -20,9 +20,7 @@ def input_error(func):
             return result
 
         except TypeError as err:
-            if func.__name__ == "add" or func.__name__ == "change":
-                message = "Введіть ім'я та номер телефону будь ласка. мінімальна довжина номеру телефону {} цифр. Максимальна {}. Літери не дозволяються"
-                return message.format(Phone.min_len, Phone.max_len)
+            
             if func.__name__ == "add_birthday":
                 return "введіть ім'я та день народження"
             if func.__name__ == "add_email":
@@ -30,7 +28,7 @@ def input_error(func):
             return err
 
         except AttributeError:
-            return "Введіть ім'я контакту, або такий контакт не існує"
+            return "Перевірте правильність набору даних:"
 
         except ValueError as err:
             return err

@@ -111,24 +111,28 @@ class Name(Field):
 
 
 class Birthday(Field):
+    def __init__(self, value):
+        self._value = None
+        self.value = value
+
     @property
     def value(self):
-        return self.value
+        return self._value
 
     @value.setter
     def value(self, value):
         try:
-            self.value = datetime.strptime(value, "%d.%m.%Y")  # Date validaiton "."
+            self._value = datetime.strptime(value, "%d.%m.%Y")  # Date validaiton "."
         except ValueError:
             try:
-                self.value = datetime.strptime(
+                self._value = datetime.strptime(
                     value, "%d/%m/%Y"
                 )  # Date validaiton "/"
             except ValueError:
-                return "використовуйте формат дати ДД.ММ.РРРР або ДД/ММ/РРРР"
+                raise ValueError("використовуйте формат дати ДД.ММ.РРРР або ДД/ММ/РРРР")
 
     def __str__(self) -> str:
-        return datetime.strftime(self.value, "%d.%m.%Y")
+        return datetime.strftime(self._value, "%d.%m.%Y")
 
 
 class Email(Field):
