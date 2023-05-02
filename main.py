@@ -324,10 +324,6 @@ def voice(content, *yes):
     engine = pyttsx3.init()
     voices = engine.getProperty('voices')
     engine.setProperty('voice', voices[0].id)
-    # index-> 0 -- Microsoft Irina Desktop - Russian
-    # index-> 1 -- Microsoft Zira Desktop - English (United States)
-    # index-> 2 -- Microsoft Paulina Desktop - Polish
-    # index-> 3 -- Microsoft David Desktop - English (United States)
     engine.say(content)
     engine.runAndWait()
     return content
@@ -403,7 +399,7 @@ def command_parser(line: str):
 
 
 is_ended = False
-sound=True
+sound=False
 # @ input_error
 def main():
     book1 = AddressBook()
