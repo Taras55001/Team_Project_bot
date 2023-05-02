@@ -61,7 +61,7 @@ def add_contact(book: AddressBook, contact: Name, *params):
             else:
                 address.append(param)
 
-        address_str = ", ".join(address)
+        address_str = " ".join(address)
         address = Address(address_str) if address_str else None
         rec_new = Record(contact_new, phone, email, address)
 
@@ -313,7 +313,7 @@ def sort_targ_folder(book: AddressBook, *args):
     target_path = " ".join(args)
     return sort_folder.main(target_path)
 
-def voice(content):
+def voice(content, *yes):
     engine = pyttsx3.init()
     voices = engine.getProperty('voices')
     engine.setProperty('voice', voices[0].id)
