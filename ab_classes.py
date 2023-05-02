@@ -57,14 +57,14 @@ class HashTag:
 
 
 class NotePad:    
-    def load_from_file(self, note_file,tag_file):
+    def load_from_file(self, note_file):
         try:
             with open(note_file, "rb") as db:
                 self.note_list = pickle.load(db)
         except EOFError:
             pass
 
-    def save_to_file(self,note_file,tag_file):
+    def save_to_file(self,note_file):
         with open(note_file, "wb") as db:
             pickle.dump(self.note_list, db)
         
