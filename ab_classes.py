@@ -247,7 +247,7 @@ class Record:
         if not self.adress:
             self.adress = adres
         else:
-            raise IndexError("День народження вже введений")
+            raise IndexError("Адреса вже введена")
         
     def add_birthday(self, birthday: Birthday):
         if not self.birthday:
