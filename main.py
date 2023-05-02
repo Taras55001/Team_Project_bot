@@ -2,8 +2,8 @@ from ab_classes import Name, Phone, Email, Birthday, Record, AddressBook, Addres
 from functools import wraps
 import json
 from pathlib import Path
-from notebook import WITH_NOTES, add_note ,change_note, change_note_stat, show_notes, show_tags, search_note, del_note
 import pyttsx3
+from notebook import WITH_NOTES, add_note ,add_tag ,change_note, change_note_stat, show_notes, search_note, del_note
 import re
 import sort_folder
 
@@ -41,7 +41,6 @@ def input_error(func):
     return wrapper
 
 
-@input_error
 def greet(*args):
     return "Вітаю, я Ваш персональний бот-помічник MemoMind 1.0.0. Чим можу допомогти?"
 
@@ -91,7 +90,6 @@ def add_address(book: AddressBook, contact: str, *adres):
 
 
 
-@input_error
 def add_email(book: AddressBook, contact: str, email: str):
     email_new = Email(email)
     rec = book.get(contact)
@@ -99,7 +97,6 @@ def add_email(book: AddressBook, contact: str, email: str):
     return f'Для існуючого контакту "{contact}" додано e-mail: {email}'
 
 
-@input_error
 def add_birthday(book: AddressBook, contact: str, birthday: str):
     b_day = Birthday(birthday)
     rec = book.get(contact)
@@ -207,7 +204,6 @@ def change_address(book: AddressBook, contact: str, *address):
         return f'Змінено адресу {old_address} на {address_new} для контакту "{contact}"'
 
 
-@ input_error
 def del_phone(book: AddressBook, contact: str, phone=None):
     rec = book.get(contact)
 
@@ -232,7 +228,6 @@ def del_phone(book: AddressBook, contact: str, phone=None):
     return f"Телефон {rec.del_phone(num)} видалено!"
 
 
-@ input_error
 def del_email(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -240,7 +235,6 @@ def del_email(book: AddressBook, *args):
     return f"Контакт {contact}, e-mail видалено"
 
 
-@ input_error
 def del_contact(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -252,7 +246,6 @@ def del_contact(book: AddressBook, *args):
     return f"Контакт {book.remove_record(contact)} Видалено!"
 
 
-@ input_error
 def del_birthday(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
@@ -267,14 +260,12 @@ def del_address(book: AddressBook, *args):
     rec.adress = None
     return f"Контакт {contact}, адреса видалена"
 
-@ input_error
 def phone(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
     return f'Контакт "{contact}". {rec.show_phones()}'
 
 
-@ input_error
 def show_all(book: AddressBook, *args):
     if len(book) <= PAGE:
         return book.show_all()
@@ -288,7 +279,6 @@ def show_all(book: AddressBook, *args):
         return f"Всього: {x} контактів."
 
 
-@ input_error
 def search(book: AddressBook, *args):
     pattern = " ".join(args)
     if len(pattern) < 3:
@@ -332,7 +322,6 @@ def help(*args):
         return output
 
 
-@ input_error
 def exit(book: AddressBook, notebook: NotePad, *args):
     global is_ended
     is_ended = True
@@ -341,7 +330,6 @@ def exit(book: AddressBook, notebook: NotePad, *args):
     return "До побачення"
 
 
-@ input_error
 def no_command(*args):
     return "Такої команди немає"
 
@@ -353,6 +341,7 @@ COMMANDS = {
     "add address": add_address,
     "add contact": add_contact,
     "add note": add_note,
+    "add tag":add_tag,
     "congrat": congrat,
     "change note": change_note,
     "change status": change_note_stat,
@@ -363,7 +352,6 @@ COMMANDS = {
     "phone": phone,
     "show all": show_all,
     "show notes": show_notes,
-    "show tags": show_tags,
     "search note": search_note,
     "search": search,
     "del note": del_note,
@@ -381,7 +369,6 @@ COMMANDS = {
 
 
 
-@ input_error
 def command_parser(line: str):
     line_prep = " ".join(line.split())
     for k, v in COMMANDS.items():
@@ -392,7 +379,7 @@ def command_parser(line: str):
 
 is_ended = False
 
-
+# @ input_error
 def main():
     book1 = AddressBook()
     notebook=NotePad()
