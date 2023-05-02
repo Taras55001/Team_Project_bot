@@ -133,7 +133,7 @@ def change(
     if not rec.phones:
         if not phone:
             phone_new = Phone(
-                input("Якщо хочете додати телефон введіть номер:"))
+                input(voice("Якщо хочете додати телефон введіть номер:")))
         else:
             phone_new = Phone(phone)
         rec.add_phone(phone_new)
@@ -143,9 +143,9 @@ def change(
         if len(rec.phones) == 1:
             num = 1
         if len(rec.phones) > 1:
-            num = int(input("Який ви хочете змінити (введіть індекс):"))
+            num = int(input(voice("Який ви хочете змінити (введіть індекс):")))
         if not phone:
-            phone_new = Phone(input("Будь ласка введіть новий номер:"))
+            phone_new = Phone(input(voice("Будь ласка введіть новий номер:")))
         else:
             phone_new = Phone(phone)
         old_phone = rec.phones[num - 1]
@@ -165,7 +165,7 @@ def change_email(
     rec = book.get(contact)
 
     if not email:
-        email_new = input("Якщо хочете змінити e-mail введіть нову адресу: ")
+        email_new = input(voice("Якщо хочете змінити e-mail введіть нову адресу: "))
     else:
         email_new = email
 
@@ -189,14 +189,14 @@ def change_address(book: AddressBook, contact: str, *address):
 
     if not rec.adress:
         if not x:
-            address_new = Address(input("Якщо хочете додати адресу, введіть її:"))
+            address_new = Address(input(voice("Якщо хочете додати адресу, введіть її:")))
         else:
             address_new = Address(x)
         rec.add_address(address_new)
         return f'Додано адресу {address_new} для контакту "{contact}"'
     else:
         if not x:
-            address_new = Address(input("Будь ласка, введіть нову адресу:"))
+            address_new = Address(input(voice("Будь ласка, введіть нову адресу:")))
         else:
             address_new = Address(x)
         old_address = rec.adress
@@ -220,8 +220,8 @@ def del_phone(book: AddressBook, contact: str, phone=None):
             ans = None
             while ans != "y":
                 ans = input(
-                    f"Контакт {rec.name} має тільки 1 телефон {rec.phones[0]}.\
-                        Ви впевнені? (Y/N)"
+                    voice(f"Контакт {rec.name} має тільки 1 телефон {rec.phones[0]}.\
+                        Ви впевнені? (Y/N)")
                 ).lower()
         else:
             num = int(input("який ви хочете видалити (введіть індекс):"))
@@ -242,7 +242,7 @@ def del_contact(book: AddressBook, *args):
         raise AttributeError
     ans = None
     while ans != "y":
-        ans = input(f"Ви впевнені що хочете видалити контакт {contact}? (Y/N)").lower()
+        ans = input(voice(f"Ви впевнені що хочете видалити контакт {contact}? (Y/N)")).lower()
     return f"Контакт {book.remove_record(contact)} Видалено!"
 
 
@@ -260,11 +260,28 @@ def del_address(book: AddressBook, *args):
     rec.adress = None
     return f"Контакт {contact}, адреса видалена"
 
+def load_data(book1: AddressBook, notebook: NotePad):
+
+    global db_file_name, not_file_name
+    with open("config.JSON") as cfg:
+        cfg_data = json.load(cfg)
+        db_file_name = cfg_data["PhoneBookFile"]
+        not_file_name=cfg_data["NoteBookFile"]
+
+    if Path(db_file_name).exists():
+        book1.load_from_file(db_file_name)
+        notebook.load_from_file(not_file_name)
+    pass
+
+@ input_error
 def phone(book: AddressBook, *args):
     contact = " ".join(args)
     rec = book.get(contact)
     return f'Контакт "{contact}". {rec.show_phones()}'
 
+def save_data(book: AddressBook, notebook: NotePad):
+    book.save_to_file(db_file_name)
+    notebook.save_to_file(not_file_name)
 
 def show_all(book: AddressBook, *args):
     if len(book) <= PAGE:
@@ -325,9 +342,8 @@ def help(*args):
 def exit(book: AddressBook, notebook: NotePad, *args):
     global is_ended
     is_ended = True
-    book.save_to_file(db_file_name)
-    notebook.save_to_file(not_file_name,tag_file_name)
-    return "До побачення"
+    save_data(book, notebook)
+    return voice("До побачення")
 
 
 def no_command(*args):
@@ -383,25 +399,18 @@ is_ended = False
 def main():
     book1 = AddressBook()
     notebook=NotePad()
-    global db_file_name, not_file_name,tag_file_name
-    with open("config.JSON") as cfg:
-        cfg_data = json.load(cfg)
-        db_file_name = cfg_data["PhoneBookFile"]
-        not_file_name=cfg_data["NoteBookFile"]
-        tag_file_name=cfg_data["TagBookFile"]
-
-    if Path(db_file_name).exists():
-        book1.load_from_file(db_file_name)
-        notebook.load_from_file(not_file_name,tag_file_name)
+    
     print("Добрий день!", f"доступні команди: {', '.join(k for k in COMMANDS.keys())}")
 
     while not is_ended:
+        load_data(book1, notebook)
         s = input(">>>")
         command, args = command_parser(s)
         if command == exit:
-            print(voice(command(book1, notebook),*args))
+            print(command(book1, notebook),*args)
         else:
             print(voice(command((notebook if command in WITH_NOTES else book1), *args)))
+        save_data(book1, notebook)
 
         
 
