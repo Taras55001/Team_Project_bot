@@ -41,7 +41,10 @@ class Note:
 
 class HashTag:
     def __init__(self, tag) -> None:
-        self.text = tag
+        if "#" in tag:
+            self.text = tag
+        else:
+            self.text="#"+tag
 
     def __repr__(self) -> str:
         return self.text
@@ -60,17 +63,10 @@ class NotePad:
                 self.note_list = pickle.load(db)
         except EOFError:
             pass
-        try:
-            with open("taglist.bin", "rb") as db:
-                self.tag_list = pickle.load(db)
-        except EOFError:
-            pass
 
     def save_to_file(self):
         with open("notelist.bin", "wb") as db:
             pickle.dump(self.note_list, db)
-        with open("taglist.bin", "wb") as db:
-            pickle.dump(self.tag_list, db)
         
     note_list = []
 

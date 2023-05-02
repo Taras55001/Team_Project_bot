@@ -275,10 +275,13 @@ def main():
 
     while not is_ended:
         s = input(">>>")
-        from test_func import test
-        test()
+        # from test_func import test
+        # test()
         command, args = command_parser(s)
-        print(command((notebook if command in WITH_NOTES else book1), *args))
+        if command == exit:
+            print(command(book1, notebook),*args)
+        else:
+            print(command((notebook if command in WITH_NOTES else book1), *args))
         
 
 

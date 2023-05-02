@@ -20,13 +20,14 @@ def change_note(notebook: NotePad, *args):
     old_note, new_note = text.split("... ")
     if old_note.startswith("#"):
         record = quick_tag(notebook, old_note)
+        old_note=record
         if record:
             notebook.change_note(record, new_note)
-            return f'"{record}" змінено на "{new_note}"'
+            return f'"{old_note}" змінено на "{new_note}"'
     record = quick_note(notebook, old_note)
     if record in notebook.note_list:
         notebook.change_note(record, new_note)
-        return f'"{record}" змінено на "{new_note}"'
+        return f'"{old_note}" змінено на "{new_note}"'
     return f'Запис "{record}" не знайдений'
 
 
