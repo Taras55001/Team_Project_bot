@@ -27,8 +27,6 @@ def input_error(func):
 @input_error
 def add_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
-    if not text:
-        raise ValueError("введіть текст нотатки")
     record = Note(text)
     notebook.add_note(record)
     return "Нотатка добавлена"
@@ -36,8 +34,6 @@ def add_note(notebook: NotePad, *args):
 
 @input_error
 def add_tag(notebook: NotePad, note, tag):
-    if not tag:
-        raise ValueError("Введіть перші_літери_нотатки... #тег")
     rec = quick_note(notebook, note)
     rec.add_tag(HashTag(tag))
     notebook.sorting()
@@ -47,8 +43,6 @@ def add_tag(notebook: NotePad, note, tag):
 @input_error
 def change_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
-    if not text:
-        raise ValueError("введіть частину тексту нотатки")
     old_note, new_note = text.split("... ")
     if old_note.startswith("#"):
         record = quick_tag(notebook, old_note)
@@ -81,8 +75,6 @@ def change_note_stat(notebook: NotePad, *args):
 @input_error
 def del_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
-    if not text:
-        raise ValueError("введіть частину тексту нотатки або #тег")
     if text.startswith("#"):
         record = quick_tag(notebook, text)
         if record:
@@ -102,7 +94,7 @@ def search_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
     text = text.replace("...", "")
     list_of_notes = []
-    error = "Запис не знайдений"
+    error = f"Запис не знайдений"
     if text.startswith("#"):
         tag = text.replace("#", "")
         for note in notebook.note_list:
@@ -125,6 +117,7 @@ def search_note(notebook: NotePad, *args):
     return output if len(list_of_notes) != 0 else error
 
 
+@input_error
 def show_notes(notebook: NotePad, *args):
     line = ""
     for note in notebook.note_list:
@@ -136,6 +129,7 @@ def show_notes(notebook: NotePad, *args):
     return "список нотатків\n" + line + "кінець списку нотаток"
 
 
+@input_error
 def quick_tag(notebook: NotePad, text: str):
     for note in notebook.note_list:
         for tag in note.tag_list:
@@ -144,6 +138,7 @@ def quick_tag(notebook: NotePad, text: str):
     return None
 
 
+@input_error
 def quick_note(notebook: NotePad, text: str):
     content = text.replace("...", "")
     for note in notebook.note_list:

@@ -265,12 +265,11 @@ def del_address(book: AddressBook, *args):
 
 
 def load_data(book1: AddressBook, notebook: NotePad):
-    global db_file_name, not_file_name, PAGE
+    global db_file_name, not_file_name
     with open("config.JSON") as cfg:
         cfg_data = json.load(cfg)
         db_file_name = cfg_data["PhoneBookFile"]
         not_file_name = cfg_data["NoteBookFile"]
-        PAGE = cfg_data["Page"]
 
     if Path(db_file_name).exists():
         book1.load_from_file(db_file_name)
@@ -332,7 +331,7 @@ def sort_targ_folder(book: AddressBook, *args):
 def voice(content, *yes):
     engine = pyttsx3.init("sapi5")
     voices = engine.getProperty("voices")
-    engine.setProperty("voice", voices[2].id)
+    engine.setProperty("voice", voices[0].id)
     engine.say(content)
     engine.runAndWait()
     return content
@@ -355,13 +354,13 @@ def no_command(*args):
     return "Такої команди немає"
 
 
-def off_sound(book, *args):
+def off_sound(book, *arg):
     global sound
     sound = False
     return "Звук вимкнено"
 
 
-def on_sound(book, *args):
+def on_sound(book, *arg):
     global sound
     sound = True
     return "Звук увімкнено"
@@ -382,8 +381,8 @@ COMMANDS = {
     "change bday": change_birthday,
     "change email": change_email,
     "change phone": change,
-    "sound off": off_sound,
-    "sound on": on_sound,
+    "off sound": off_sound,
+    "on sound": on_sound,
     "phone": phone,
     "show contacts": show_all,
     "show notes": show_notes,
@@ -420,7 +419,7 @@ def main():
     notebook = NotePad()
 
     print(
-        "MemoMind 1.0.0\n", f"Доступні команди: {', '.join(k for k in COMMANDS.keys())}"
+        "MemoMind 1.0.0\n", f"доступні команди: {', '.join(k for k in COMMANDS.keys())}"
     )
 
     while not is_ended:

@@ -265,12 +265,11 @@ def del_address(book: AddressBook, *args):
 
 
 def load_data(book1: AddressBook, notebook: NotePad):
-    global db_file_name, not_file_name, PAGE
+    global db_file_name, not_file_name
     with open("config.JSON") as cfg:
         cfg_data = json.load(cfg)
         db_file_name = cfg_data["PhoneBookFile"]
         not_file_name = cfg_data["NoteBookFile"]
-        PAGE = cfg_data["Page"]
 
     if Path(db_file_name).exists():
         book1.load_from_file(db_file_name)
@@ -330,9 +329,9 @@ def sort_targ_folder(book: AddressBook, *args):
 
 
 def voice(content, *yes):
-    engine = pyttsx3.init("sapi5")
+    engine = pyttsx3.init()
     voices = engine.getProperty("voices")
-    engine.setProperty("voice", voices[2].id)
+    engine.setProperty("voice", voices[0].id)
     engine.say(content)
     engine.runAndWait()
     return content
@@ -355,13 +354,13 @@ def no_command(*args):
     return "Такої команди немає"
 
 
-def off_sound(book, *args):
+def off_sound(book, *arg):
     global sound
     sound = False
     return "Звук вимкнено"
 
 
-def on_sound(book, *args):
+def on_sound(book, *arg):
     global sound
     sound = True
     return "Звук увімкнено"
@@ -370,7 +369,7 @@ def on_sound(book, *args):
 COMMANDS = {
     "hello": greet,
     "add email": add_email,
-    "add bday": add_birthday,
+    "add b_day": add_birthday,
     "add address": add_address,
     "add contact": add_contact,
     "add note": add_note,
@@ -379,20 +378,20 @@ COMMANDS = {
     "change note": change_note,
     "change status": change_note_stat,
     "change address": change_address,
-    "change bday": change_birthday,
+    "change b_day": change_birthday,
     "change email": change_email,
     "change phone": change,
-    "sound off": off_sound,
-    "sound on": on_sound,
+    "off sound": off_sound,
+    "on sound": on_sound,
     "phone": phone,
-    "show contacts": show_all,
+    "show all": show_all,
     "show notes": show_notes,
     "search note": search_note,
     "search": search,
     "del note": del_note,
     "del address": del_address,
     "del phone": del_phone,
-    "del bday": del_birthday,
+    "del b_day": del_birthday,
     "del email": del_email,
     "del contact": del_contact,
     "sort folder": sort_targ_folder,
@@ -419,9 +418,7 @@ def main():
     book1 = AddressBook()
     notebook = NotePad()
 
-    print(
-        "MemoMind 1.0.0\n", f"Доступні команди: {', '.join(k for k in COMMANDS.keys())}"
-    )
+    print("Добрий день!", f"доступні команди: {', '.join(k for k in COMMANDS.keys())}")
 
     while not is_ended:
         load_data(book1, notebook)

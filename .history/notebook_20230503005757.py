@@ -1,54 +1,25 @@
 """adding ,changing ,changing status, deleting, searching notes
 , adding tag, searching by tag"""
 from ab_classes import Note, NotePad, HashTag
+from itertools import wrapper
 
 
-def input_error(func):
-    def wrapper(*args):
-        try:
-            result = func(*args)
-            return result
-
-        except TypeError as err:
-            return err
-
-        except AttributeError:
-            return "Перевірте правильність набору даних:"
-
-        except ValueError as err:
-            return err
-
-        except IndexError as err:
-            return err
-
-    return wrapper
-
-
-@input_error
 def add_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
-    if not text:
-        raise ValueError("введіть текст нотатки")
     record = Note(text)
     notebook.add_note(record)
-    return "Нотатка добавлена"
+    return f'Запис "{record}" створено'
 
 
-@input_error
 def add_tag(notebook: NotePad, note, tag):
-    if not tag:
-        raise ValueError("Введіть перші_літери_нотатки... #тег")
     rec = quick_note(notebook, note)
     rec.add_tag(HashTag(tag))
     notebook.sorting()
     return f'Тег "{tag}" додано до запису "{rec}"'
 
 
-@input_error
 def change_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
-    if not text:
-        raise ValueError("введіть частину тексту нотатки")
     old_note, new_note = text.split("... ")
     if old_note.startswith("#"):
         record = quick_tag(notebook, old_note)
@@ -63,7 +34,6 @@ def change_note(notebook: NotePad, *args):
     return f'Запис "{record}" не знайдений'
 
 
-@input_error
 def change_note_stat(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
     if text.startswith("#"):
@@ -78,11 +48,8 @@ def change_note_stat(notebook: NotePad, *args):
     return f'Запис "{record}" не знайдений'
 
 
-@input_error
 def del_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
-    if not text:
-        raise ValueError("введіть частину тексту нотатки або #тег")
     if text.startswith("#"):
         record = quick_tag(notebook, text)
         if record:
@@ -97,12 +64,11 @@ def del_note(notebook: NotePad, *args):
     return f'Запис "{record}" не знайдений'
 
 
-@input_error
 def search_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
     text = text.replace("...", "")
     list_of_notes = []
-    error = "Запис не знайдений"
+    error = f"Запис не знайдений"
     if text.startswith("#"):
         tag = text.replace("#", "")
         for note in notebook.note_list:

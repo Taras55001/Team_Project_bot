@@ -270,7 +270,7 @@ def load_data(book1: AddressBook, notebook: NotePad):
         cfg_data = json.load(cfg)
         db_file_name = cfg_data["PhoneBookFile"]
         not_file_name = cfg_data["NoteBookFile"]
-        PAGE = cfg_data["Page"]
+        PAGE = cfg_data["PAGE"]
 
     if Path(db_file_name).exists():
         book1.load_from_file(db_file_name)
@@ -332,7 +332,7 @@ def sort_targ_folder(book: AddressBook, *args):
 def voice(content, *yes):
     engine = pyttsx3.init("sapi5")
     voices = engine.getProperty("voices")
-    engine.setProperty("voice", voices[2].id)
+    engine.setProperty("voice", voices[0].id)
     engine.say(content)
     engine.runAndWait()
     return content
