@@ -1,7 +1,7 @@
 """adding ,changing ,changing status, deleting, searching notes
 , adding tag, searching by tag"""
 from ab_classes import Note, NotePad, HashTag
-
+from main import languages
 
 def input_error(func):
     def wrapper(*args):
@@ -13,7 +13,10 @@ def input_error(func):
             return err
 
         except AttributeError:
-            return "Перевірте правильність набору даних:"
+            if languages:
+
+            else:
+                return "Перевірте правильність набору даних:"
 
         except ValueError as err:
             return err
@@ -28,10 +31,16 @@ def input_error(func):
 def add_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
     if not text:
-        raise ValueError("введіть текст нотатки")
+        if languages:
+
+        else:
+            raise ValueError("введіть текст нотатки")
     record = Note(text)
     notebook.add_note(record)
-    return "Нотатка добавлена"
+    if languages:
+
+    else:
+        return "Нотатка добавлена"
 
 
 @input_error
