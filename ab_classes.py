@@ -207,22 +207,28 @@ class Record:
 
     def __str__(self):
         line = "{}: Телефони: {}; E-mail: {}; Дата народження: {}; Адреса: {} \n"
+        address =  self.adress if self.adress else "-" 
+        email = self.email if self.email else "-"
+        birthday = self.birthday if self.birthday else "-"
         return line.format(
             self.name,
             ", ".join([str(phone) for phone in self.phones]),
-            self.email,
-            self.birthday,
-            self.adress,
+            email,
+            birthday,
+            address,
         )
 
     def __repr__(self):
         line = "{}: Телефони: {}; E-mail: {}; Дата народження: {}; Адреса: {} \n"
+        email = self.email if self.email else "-"
+        address = self.adress if self.adress else "-"
+        birthday = self.birthday if self.birthday else "-"
         return line.format(
             self.name,
             ", ".join([str(phone) for phone in self.phones]),
-            self.email,
-            self.birthday,
-            self.adress,
+            email,
+            birthday,
+            address,
         )
 
     def days_to_birthday(self) -> int:
