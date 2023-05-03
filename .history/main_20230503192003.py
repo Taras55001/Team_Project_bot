@@ -486,9 +486,9 @@ def exit(book: AddressBook, notebook: NotePad, *args):
     is_ended = True
     save_data(book, notebook)
     if languages:
-        return voice("Goodbye") if sound else "Goodbye"
+        return voice("Goodbye")
     else:
-        return "До побачення"
+        return voice("До побачення")
 
 
 def no_command(*args):
@@ -519,30 +519,22 @@ def on_sound(book, *args):
 @input_error
 def language(book, *args):
     global languages
-    with open("config.JSON", "r") as cfg:
+    with open("config.JSON") as cfg:
         cfg_data = json.load(cfg)
-    if languages:
-        x = input("Choose language: English or Ukrainian?(eng/ukr)>>> ")
-    else:
-        x = input("Виберіть мову: англійська або українська?(eng/ukr)>>> ")
+
+    x = input("Choose language: English or Ukrainian?(rng/ukr)>>> ")
     if "e" in x or "E" in x:
         with open("config.JSON", "w") as cfg:
-            cfg_data["Language"] = "eng"
+            cfg_data = json.load(cfg)
+            cfg_data["Languages"] = "eng"
             json.dump(cfg_data, cfg)
-            return (
-                f"The language was successfully selected. To apply pease restart the bot"
-                if languages
-                else f"Мова виводу на екран була успішно вибрана. Зміниться після перезапуску боту"
-            )
+            return f"The language was successfully selected. To apply pease restart the bot"
     else:
         with open("config.JSON", "w") as cfg:
-            cfg_data["Language"] = "ukr"
+            cfg_data = json.load(cfg)
+            cfg_data["Languages"] = "ukr"
             json.dump(cfg_data, cfg)
-            return (
-                f"The language was successfully selected. To apply pease restart the bot"
-                if languages
-                else f"Мова виводу на екран була успішно вибрана. Зміниться після перезапуску боту"
-            )
+            return f"Мова виводу на екран була успішно вибрана. Зміниться після перезапуску боту"
 
 
 COMMANDS = {

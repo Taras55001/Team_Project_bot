@@ -621,8 +621,8 @@ def main():
             if sound:
                 if command == exit:
                     print(command(book1, notebook), *args)
-                elif command == help:
-                    print(command(book1, notebook), *args)
+                # elif command == help:
+                #     print(command(book1, notebook), *args)
                 else:
                     print(
                         voice(

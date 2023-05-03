@@ -3,10 +3,6 @@
 from ab_classes import Note, NotePad, HashTag
 import json
 
-with open("config.JSON") as cfg:
-    cfg_data = json.load(cfg)
-    languages = True if cfg_data["Language"] == "eng" else False
-
 
 def input_error(func):
     def wrapper(*args):

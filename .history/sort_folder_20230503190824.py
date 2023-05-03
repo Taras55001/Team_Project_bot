@@ -13,8 +13,6 @@ known_types = set()
 unknown_types = set()
 deleted_folders = []
 
-languages = True
-
 
 def read_config():
     global CATEGORIES
@@ -25,12 +23,10 @@ def read_config():
     #     cfg_str = cfg.read()
 
     with open("config.JSON") as cfg:
-        global languages
         cfg_data = json.load(cfg)
         CATEGORIES = cfg_data["FILETYPES"]
         for key in CATEGORIES:
             found_files.update({key: []})
-        languages = True if cfg_data["Language"] == "eng" else False
 
 
 def scan_folder(path: Path):

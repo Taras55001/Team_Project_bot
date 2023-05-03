@@ -1,11 +1,7 @@
 """adding ,changing ,changing status, deleting, searching notes
 , adding tag, searching by tag"""
 from ab_classes import Note, NotePad, HashTag
-import json
-
-with open("config.JSON") as cfg:
-    cfg_data = json.load(cfg)
-    languages = True if cfg_data["Language"] == "eng" else False
+from main import languages
 
 
 def input_error(func):

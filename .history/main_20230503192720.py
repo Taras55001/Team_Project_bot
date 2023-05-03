@@ -486,9 +486,9 @@ def exit(book: AddressBook, notebook: NotePad, *args):
     is_ended = True
     save_data(book, notebook)
     if languages:
-        return voice("Goodbye") if sound else "Goodbye"
+        return voice("Goodbye")
     else:
-        return "До побачення"
+        return voice("До побачення")
 
 
 def no_command(*args):
@@ -536,7 +536,7 @@ def language(book, *args):
             )
     else:
         with open("config.JSON", "w") as cfg:
-            cfg_data["Language"] = "ukr"
+            cfg_data["Languagel"] = "ukr"
             json.dump(cfg_data, cfg)
             return (
                 f"The language was successfully selected. To apply pease restart the bot"

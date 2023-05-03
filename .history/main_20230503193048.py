@@ -486,9 +486,9 @@ def exit(book: AddressBook, notebook: NotePad, *args):
     is_ended = True
     save_data(book, notebook)
     if languages:
-        return voice("Goodbye") if sound else "Goodbye"
+        return voice("Goodbye")
     else:
-        return "До побачення"
+        return voice("До побачення")
 
 
 def no_command(*args):
