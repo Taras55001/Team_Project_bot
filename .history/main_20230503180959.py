@@ -163,7 +163,7 @@ def congrat(book: AddressBook, days: int):
             output += str(contact)
     if languages:
         text = (
-            f"the following contacts haave birthdays:\n{output}"
+            f"birthday in the following contacts:\n{output}"
             if output
             else "none of the contacts has a birthday"
         )
@@ -249,7 +249,7 @@ def change_email(
     if not email:
         if languages:
             email_new = input(
-                voice("If you want to change the e-mail, enter a new address: ")
+                voice("If you want to change your e-mail, enter a new address: ")
             )
         else:
             email_new = input(voice("Якщо хочете змінити e-mail введіть нову адресу: "))
@@ -456,15 +456,15 @@ def search(book: AddressBook, *args):
 
 
 @input_error
-def sort_targ_folder(book: AddressBook, languges, *args):
+def sort_targ_folder(book: AddressBook, *args):
     target_path = " ".join(args)
-    return sort_folder.main(target_path,languges)
+    return sort_folder.main(target_path)
 
 
 def voice(content, *yes):
     engine = pyttsx3.init("sapi5")
     voices = engine.getProperty("voices")
-    engine.setProperty("voice", voices[0].id)
+    engine.setProperty("voice", voices[2].id)
     engine.say(content)
     engine.runAndWait()
     return content
@@ -486,14 +486,14 @@ def exit(book: AddressBook, notebook: NotePad, *args):
     is_ended = True
     save_data(book, notebook)
     if languages:
-        return voice("Goodbye") if sound else "Goodbye"
+        return voice("Goodbye")
     else:
-        return "До побачення"
+        return voice("До побачення")
 
 
 def no_command(*args):
     if languages:
-        return "There is no such command"
+        return "There is no such team"
     else:
         return "Такої команди немає"
 
@@ -504,45 +504,30 @@ def off_sound(book, *args):
     if languages:
         return "Sound off"
     else:
-        return "В український версії читання вголос поки що не доступне"
+        return "Звук вимкнено"
 
 
 def on_sound(book, *args):
     global sound
+    sound = True
     if languages:
-        sound = True
         return "Sound on"
     else:
-        return "В український версії читання вголос поки ще не доступне"
+        return "Звук увімкнено"
 
 
 @input_error
-def language(book, *args):
+def language(yes):
     global languages
-    with open("config.JSON", "r") as cfg:
-        cfg_data = json.load(cfg)
-    if languages:
-        x = input("Choose language: English or Ukrainian?(eng/ukr)>>> ")
-    else:
-        x = input("Виберіть мову: англійська або українська?(eng/ukr)>>> ")
+    x = input(
+        "Choose language English or Ukrainian? \nWrite Eng if u want English or Ukr if want Ukrainian"
+    )
     if "e" in x or "E" in x:
-        with open("config.JSON", "w") as cfg:
-            cfg_data["Language"] = "eng"
-            json.dump(cfg_data, cfg)
-            return (
-                f"The language was successfully selected. To apply pease restart the bot"
-                if languages
-                else f"Мова виводу на екран була успішно вибрана. Зміниться після перезапуску боту"
-            )
+        languages = True
+        return f"The language was successfully selected"
     else:
-        with open("config.JSON", "w") as cfg:
-            cfg_data["Language"] = "ukr"
-            json.dump(cfg_data, cfg)
-            return (
-                f"The language was successfully selected. To apply pease restart the bot"
-                if languages
-                else f"Мова виводу на екран була успішно вибрана. Зміниться після перезапуску боту"
-            )
+        languages = False
+        return f"Мова була успішно вибрана"
 
 
 COMMANDS = {
@@ -574,7 +559,6 @@ COMMANDS = {
     "del email": del_email,
     "del contact": del_contact,
     "sort folder": sort_targ_folder,
-    "lang": language,
     "close": exit,
     "good bye": exit,
     "exit": exit,
@@ -592,16 +576,14 @@ def command_parser(line: str):
 
 is_ended = False
 sound = False
-languages = True  # True=En, False=Ukraine
+languages = True
 
 
+# True=En, False=Ukraine
 def main():
-    global languages
-    with open("config.JSON") as cfg:
-        cfg_data = json.load(cfg)
-        languages = True if cfg_data["Language"] == "eng" else False
     book1 = AddressBook()
     notebook = NotePad()
+    print(language("suda"))
     if languages:
         print(
             "MemoMind 1.0.0\n",
@@ -621,8 +603,6 @@ def main():
             if sound:
                 if command == exit:
                     print(command(book1, notebook), *args)
-                elif command == sort_targ_folder:
-                    print(command(book1), *args)
                 elif command == help:
                     print(command(book1, notebook), *args)
                 else:

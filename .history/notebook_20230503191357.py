@@ -51,15 +51,12 @@ def add_note(notebook: NotePad, *args):
 @input_error
 def add_tag(notebook: NotePad, note, tag):
     if not tag:
-        if languages:
-            raise ValueError("Enter the first letters of the note... #tag")
-        else:
-            raise ValueError("Введіть перші_літери_нотатки... #тег")
+        raise ValueError("Введіть перші_літери_нотатки... #тег")
     rec = quick_note(notebook, note)
     rec.add_tag(HashTag(tag))
     notebook.sorting()
     if languages:
-        return f'Tag "{tag}" added to record "{rec}"'
+        return f'Tag "{tag}" added to th record "{rec}"'
     else:
         return f'Тег "{tag}" додано до запису "{rec}"'
 
@@ -68,31 +65,19 @@ def add_tag(notebook: NotePad, note, tag):
 def change_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
     if not text:
-        if languages:
-            raise ValueError("enter part of the note text")
-        else:
-            raise ValueError("введіть частину тексту нотатки")
+        raise ValueError("введіть частину тексту нотатки")
     old_note, new_note = text.split("... ")
     if old_note.startswith("#"):
         record = quick_tag(notebook, old_note)
         old_note = record
         if record:
             notebook.change_note(record, new_note)
-            if languages:
-                return f'"{old_note}" changed to "{new_note}"'
-            else:
-                return f'"{old_note}" змінено на "{new_note}"'
+            return f'"{old_note}" змінено на "{new_note}"'
     record = quick_note(notebook, old_note)
     if record in notebook.note_list:
         notebook.change_note(record, new_note)
-        if languages:
-            return f'"{old_note}" changed to "{new_note}"'
-        else:
-            return f'"{old_note}" змінено на "{new_note}"'
-    if languages:
-        return f'Record "{record}" not found'
-    else:
-        return f'Запис "{record}" не знайдений'
+        return f'"{old_note}" змінено на "{new_note}"'
+    return f'Запис "{record}" не знайдений'
 
 
 @input_error
@@ -102,52 +87,31 @@ def change_note_stat(notebook: NotePad, *args):
         record = quick_tag(notebook, text)
         if record:
             notebook.change_status(record)
-            if languages:
-                return f'The status of {record} has been changed to "done"'
-            else:
-                return f'Статус нотатки {record} змінено на "виконано"'
+            return f'Статус нотатки {record} змінено на "виконано"'
     record = quick_note(notebook, text)
     if record in notebook.note_list:
         notebook.change_status(record)
-        if languages:
-            return f'The status of {record} has been changed to "done"'
-        else:
-            return f'Статус нотатки {record} змінено на "виконано"'
-    if languages:
-        return f'Record "{record}" not found'
-    else:
-        return f'Запис "{record}" не знайдений'
+        return f'Статус нотатки {record} змінено на "виконано"'
+    return f'Запис "{record}" не знайдений'
 
 
 @input_error
 def del_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
     if not text:
-        if languages:
-            raise ValueError("enter part of note text or #tag")
-        else:
-            raise ValueError("введіть частину тексту нотатки або #тег")
+        raise ValueError("введіть частину тексту нотатки або #тег")
     if text.startswith("#"):
         record = quick_tag(notebook, text)
         if record:
             notebook.delete(record)
             notebook.sorting()
-            if languages:
-                return f'"{record}" deleted successfully'
-            else:
-                return f'"{record}" видалений успішно'
+            return f'"{record}" видалений успішно'
     record = quick_note(notebook, text)
     if record in notebook.note_list:
         notebook.delete(record)
         notebook.sorting()
-        if languages:
-            return f'"{record}" deleted successfully'
-        else:
-            return f'"{record}" видалений успішно'
-    if languages:
-        return f'Record "{record}" not found'
-    else:
-        return f'Запис "{record}" не знайдений'
+        return f'"{record}" видалений успішно'
+    return f'Запис "{record}" не знайдений'
 
 
 @input_error
@@ -155,43 +119,26 @@ def search_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
     text = text.replace("...", "")
     list_of_notes = []
-    if languages:
-        error = "Record not found"
-    else:
-        error = "Запис не знайдений"
+    error = "Запис не знайдений"
     if text.startswith("#"):
         tag = text.replace("#", "")
         for note in notebook.note_list:
             for hashtag in note.tag_list:
                 list_of_notes.append(note) if tag in str(hashtag) else None
-        if languages:
-            output = (
-                f"Found notes for {text}"
-                + "\n"
-                + f'{", ".join(str(note) for note in list_of_notes)}'
-            )
-        else:
-            output = (
-                f"Знайдені нотатки за {text}"
-                + "\n"
-                + f'{", ".join(str(note) for note in list_of_notes)}'
-            )
+        output = (
+            f"Знайдені нотатки за {text}"
+            + "\n"
+            + f'{", ".join(str(note) for note in list_of_notes)}'
+        )
         return output if len(list_of_notes) != 0 else error
     for note in notebook.note_list:
         if text in str(note):
             list_of_notes.append(note)
-    if languages:
-        output = (
-            f"Found notes for {text}"
-            + "\n"
-            + f'{ ", ".join(str(note) for note in list_of_notes)}'
-        )
-    else:
-        output = (
-            f"Знайдені нотатки за {text}"
-            + "\n"
-            + f'{ ", ".join(str(note) for note in list_of_notes)}'
-        )
+    output = (
+        f"Знайдені нотатки за {text}"
+        + "\n"
+        + f'{ ", ".join(str(note) for note in list_of_notes)}'
+    )
     return output if len(list_of_notes) != 0 else error
 
 
@@ -199,20 +146,11 @@ def show_notes(notebook: NotePad, *args):
     line = ""
     for note in notebook.note_list:
         tags = ", ".join(str(tag) for tag in note.tag_list)
-        if languages:
-            line += (
-                f'{tags} creation date: {note.day.strftime("%d-%m-%Y")}.Content: {str(note)}.Status {f"done.Date done {note.done_date}"if note.done else "not done"}'
-                + "\n"
-            )
-        else:
-            line += (
-                f'{tags} дата створення: {note.day.strftime("%d-%m-%Y")}.Зміст: {str(note)}.Статус {f"виконано.Дата виконання {note.done_date}"if note.done else "не виконано"}'
-                + "\n"
-            )
-    if languages:
-        return "list of notes\n" + line + "end of list of notes"
-    else:
-        return "список нотатків\n" + line + "кінець списку нотаток"
+        line += (
+            f'{tags} дата створення: {note.day.strftime("%d-%m-%Y")}.Зміст: {str(note)}.Статус {f"виконано.Дата виконання {note.done_date}"if note.done else "не виконано"}'
+            + "\n"
+        )
+    return "список нотатків\n" + line + "кінець списку нотаток"
 
 
 def quick_tag(notebook: NotePad, text: str):

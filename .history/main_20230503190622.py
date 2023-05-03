@@ -456,9 +456,9 @@ def search(book: AddressBook, *args):
 
 
 @input_error
-def sort_targ_folder(book: AddressBook, languges, *args):
+def sort_targ_folder(book: AddressBook, *args):
     target_path = " ".join(args)
-    return sort_folder.main(target_path,languges)
+    return sort_folder.main(target_path)
 
 
 def voice(content, *yes):
@@ -486,9 +486,9 @@ def exit(book: AddressBook, notebook: NotePad, *args):
     is_ended = True
     save_data(book, notebook)
     if languages:
-        return voice("Goodbye") if sound else "Goodbye"
+        return voice("Goodbye")
     else:
-        return "До побачення"
+        return voice("До побачення")
 
 
 def no_command(*args):
@@ -517,32 +517,22 @@ def on_sound(book, *args):
 
 
 @input_error
-def language(book, *args):
+def language(yes):
     global languages
-    with open("config.JSON", "r") as cfg:
+    with open("config.JSON") as cfg:
         cfg_data = json.load(cfg)
-    if languages:
-        x = input("Choose language: English or Ukrainian?(eng/ukr)>>> ")
-    else:
-        x = input("Виберіть мову: англійська або українська?(eng/ukr)>>> ")
+
+    x = input(
+        "Choose language: English or Ukrainian? \nWrite Eng for want English or Ukr for Ukrainian"
+    )
     if "e" in x or "E" in x:
-        with open("config.JSON", "w") as cfg:
-            cfg_data["Language"] = "eng"
-            json.dump(cfg_data, cfg)
-            return (
-                f"The language was successfully selected. To apply pease restart the bot"
-                if languages
-                else f"Мова виводу на екран була успішно вибрана. Зміниться після перезапуску боту"
-            )
+        cfg_data["Languages"] = "eng"
+        json.dump(cfg_data, cfg)
+        return f"The language was successfully selected. To apply pease restart the bot"
     else:
-        with open("config.JSON", "w") as cfg:
-            cfg_data["Language"] = "ukr"
-            json.dump(cfg_data, cfg)
-            return (
-                f"The language was successfully selected. To apply pease restart the bot"
-                if languages
-                else f"Мова виводу на екран була успішно вибрана. Зміниться після перезапуску боту"
-            )
+        cfg_data["Languages"] = "ukr"
+        json.dump(cfg_data, cfg)
+        return f"Мова виводу на екран була успішно вибрана. Зміниться після перезапуску боту"
 
 
 COMMANDS = {
@@ -592,16 +582,16 @@ def command_parser(line: str):
 
 is_ended = False
 sound = False
-languages = True  # True=En, False=Ukraine
 
 
 def main():
-    global languages
+    global languages  # True=En, False=Ukraine
     with open("config.JSON") as cfg:
         cfg_data = json.load(cfg)
         languages = True if cfg_data["Language"] == "eng" else False
     book1 = AddressBook()
     notebook = NotePad()
+    # print(language("suda"))
     if languages:
         print(
             "MemoMind 1.0.0\n",
@@ -621,8 +611,6 @@ def main():
             if sound:
                 if command == exit:
                     print(command(book1, notebook), *args)
-                elif command == sort_targ_folder:
-                    print(command(book1), *args)
                 elif command == help:
                     print(command(book1, notebook), *args)
                 else:

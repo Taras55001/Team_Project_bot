@@ -120,29 +120,20 @@ def normalize_all(path: Path):
             item.rename(new_name)
 
 
-def report_category(category: str, files_lst: list,languges ):
-    if languges:
-        print(f'Found files in category "{category.capitalize()}": ', len(files_lst))
-    else:
-        print(f'Знайдено файлів в категорії "{category.capitalize()}": ', len(files_lst))
+def report_category(category: str, files_lst: list):
+    print(f'Знайдено файлів в категорії "{category.capitalize()}": ', len(files_lst))
 
 
-def main(work_path, languges):
+def main(work_path):
     read_config()
 
     if not work_path:
-        if languges:
-            return "Please specify the target path in the parameters"
-        else:
-            return "Будь ласка вкажіть цільовий шлях в параметрах"
+        return "Будь ласка вкажіть цільовий шлях в параметрах"
 
     path = Path(work_path)
 
     if not path.exists():
-        if languges:
-            return "The specified path does not exist"
-        else:
-            return "Вказаний шлях не існує"
+        return "Вказаний шлях не існує"
     try:
         normalize_all(path)
 
@@ -162,16 +153,9 @@ def main(work_path, languges):
         del_empty_folders(path)
 
     except PermissionError:
-        if languges:   
-            return "No change is allowed. Close the target folder or its subfolders in all other applications."
-        else:
-            return "Немає дозволу на зміни. Закрийте цільову теку або її підтеки в всіх інших додатках."
-    if languges:
-        output = f"""Found files of known types: {', '.join(f for f in known_types)}. Total {len(known_types)} files.
-Found files of unknown types: {', '.join(f for f in unknown_types)}. total {len(unknown_types)} files.
-Deleted empty folders {len(deleted_folders)}"""
-    else:
-        output = f"""Знайдено файли відомих типів: {', '.join(f for f in known_types)}. Всього {len(known_types)} файлів.
+        return "Немає дозволу на зміни. Закрийте цільову теку або її підтеки в всіх інших додатках."
+
+    output = f"""Знайдено файли відомих типів: {', '.join(f for f in known_types)}. Всього {len(known_types)} файлів.
 Знайдено файли невідомих типів: {', '.join(f for f in unknown_types)}. всього {len(unknown_types)} файлів.
 Видалено порожніх тек {len(deleted_folders)}"""
 

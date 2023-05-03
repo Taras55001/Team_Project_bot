@@ -456,9 +456,9 @@ def search(book: AddressBook, *args):
 
 
 @input_error
-def sort_targ_folder(book: AddressBook, languges, *args):
+def sort_targ_folder(book: AddressBook, *args):
     target_path = " ".join(args)
-    return sort_folder.main(target_path,languges)
+    return sort_folder.main(target_path)
 
 
 def voice(content, *yes):
@@ -486,9 +486,9 @@ def exit(book: AddressBook, notebook: NotePad, *args):
     is_ended = True
     save_data(book, notebook)
     if languages:
-        return voice("Goodbye") if sound else "Goodbye"
+        return voice("Goodbye")
     else:
-        return "До побачення"
+        return voice("До побачення")
 
 
 def no_command(*args):
@@ -621,8 +621,6 @@ def main():
             if sound:
                 if command == exit:
                     print(command(book1, notebook), *args)
-                elif command == sort_targ_folder:
-                    print(command(book1), *args)
                 elif command == help:
                     print(command(book1, notebook), *args)
                 else:
