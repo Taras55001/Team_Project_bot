@@ -250,11 +250,9 @@ def change_email(
 
     if not email:
         if languages:
-            email_new = input(
-                voice("If you want to change the e-mail, enter a new address: ")
-            )
+            email_new = input("If you want to change the e-mail, enter a new address: ")
         else:
-            email_new = input(voice("Якщо хочете змінити e-mail введіть нову адресу: "))
+            email_new = input("Якщо хочете змінити e-mail введіть нову адресу: ")
     else:
         email_new = email
 
@@ -380,10 +378,9 @@ def del_address(book: AddressBook, *args):
 
 def load_data(book1: AddressBook, notebook: NotePad):
     global db_file_name, note_file_name, PAGE
-    with open(os.path.join("memomimd", "config.JSON")) as cfg:
+    with open(os.path.join("memomind", "config.JSON")) as cfg:
         cfg_data = json.load(cfg)
         dir_path = os.path.dirname(__file__)
-        print(dir_path)
         db_file_name = os.path.join(dir_path, cfg_data["PhoneBookFile"])
         note_file_name = os.path.join(dir_path, cfg_data["NoteBookFile"])
         PAGE = cfg_data["Page"]
@@ -521,14 +518,14 @@ def on_sound(book, *args):
 @input_error
 def language(book, *args):
     global languages
-    with open(os.path.join("memomimd", "config.JSON"), "r") as cfg:
+    with open(os.path.join("memomind", "config.JSON"), "r") as cfg:
         cfg_data = json.load(cfg)
     if languages:
         x = input("Choose language: English or Ukrainian?(eng/ukr)>>> ")
     else:
         x = input("Виберіть мову: англійська або українська?(eng/ukr)>>> ")
     if "e" in x or "E" in x:
-        with open(os.path.join("memomimd", "config.JSON"), "w") as cfg:
+        with open(os.path.join("memomind", "config.JSON"), "w") as cfg:
             cfg_data["Language"] = "eng"
             json.dump(cfg_data, cfg)
             return (
@@ -537,7 +534,7 @@ def language(book, *args):
                 else "Мова виводу на екран була успішно вибрана. Зміниться після перезапуску боту"
             )
     else:
-        with open(os.path.join("memomimd", "config.JSON"), "w") as cfg:
+        with open(os.path.join("memomind", "config.JSON"), "w") as cfg:
             cfg_data["Language"] = "ukr"
             json.dump(cfg_data, cfg)
             return (
@@ -599,7 +596,7 @@ languages = True  # True=En, False=Ukraine
 
 def main():
     global languages
-    with open(os.path.join("memomimd", "config.JSON")) as cfg:
+    with open(os.path.join("memomind", "config.JSON")) as cfg:
         cfg_data = json.load(cfg)
         languages = True if cfg_data["Language"] == "eng" else False
     book1 = AddressBook()

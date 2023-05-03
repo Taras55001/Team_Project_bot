@@ -18,6 +18,6 @@ setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
-    install_requires=["pyttsx3==2.90"],
+    install_requires=requirements,
     entry_points={"console_scripts": ["memo = memomind.main:main"]},
-)
+)   

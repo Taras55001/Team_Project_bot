@@ -24,7 +24,7 @@ def read_config():
     # with open("config.txt") as cfg:
     #     cfg_str = cfg.read()
 
-    with open(os.path.join("memomimd", "config.JSON")) as cfg:
+    with open(os.path.join("memomind", "config.JSON")) as cfg:
         global languages
         cfg_data = json.load(cfg)
         CATEGORIES = cfg_data["FILETYPES"]
