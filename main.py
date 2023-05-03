@@ -8,6 +8,7 @@ import re
 import sort_folder
 
 
+
 PAGE = 10
 db_file_name = ""
 
@@ -322,7 +323,7 @@ def sort_targ_folder(book: AddressBook, *args):
 def voice(content, *yes):
     engine = pyttsx3.init()
     voices = engine.getProperty('voices')
-    engine.setProperty('voice', voices[0].id)
+    engine.setProperty('voice', voices[1].id)
     engine.say(content)
     engine.runAndWait()
     return content
