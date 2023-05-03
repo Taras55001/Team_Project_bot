@@ -1,33 +1,36 @@
-Бот "Memo Mind 1.0.0".
-Цей бот використовується для зберігання важливої інформації такої як телефонна книга, а також список нотаток/завдань з хештегами, і ще даяких інших корисних функцій. Основні команди (всі команди сase-insensitive):
+Bot "MemoMind 1.0.0".
+This bot is used to store important information such as a phone book, as well as a list of notes/tasks with hashtags and some other useful functions. Basic commands (all commands are case-insensitive):
 
-- HELLO: вітається з користувачем
-- SOUND OFF: вимикає озвучку голосових повідомлень. Формат: sound off
-- SOUND ON: вмикає озвучку голосових повідомлень. Формат: sound on
-- ADD CONTACT: додає контакт та його дані в телефонну книгу. Формат: add contact ім'я (обов'язковий параметр) телефон пошта адреса (необов'язкові праметри) Імена користувачів не можуть складатись тільки з цифр і бути коротше 3-х символів
-- ADD NOTE: додає нотатку(з поточною датою та статусом "не виконано") до списку нотаток
-- ADD TAG: додає тег до нотатки. Формат: add tag перші_літери_нотатки... #тег
-- ADD ADDRESS: Добавляє адрес контакта. Формат: add adres ім'я адрес
-- ADD EMAIL: додає e-mail контакта. Формат: add email ім'я e-mail
-- ADD BDAY: додає дату народження контакта. Формат: add bday ім'я дата.
-- CHANGE PHONE: змінює телефон(и) контакту. Формат: change phone ім'я телефон (необов'язковий праметр). Якщо в контакту не було телефона, можно одразу додати. Якщо 1 номер він замінюється на новий. В разі якщо в контакта у книзі більше одного номера телефону можна вибрати який з них змінити
-- CHANGE EMAIL: змінює єлектронну почту контакту. Формат: change email ім'я (обов'язковий параметр) електронна пошта.
-- CHANGE BIRTHDAY: змінює дату народження. Формат: change b_day ім'я дата.
-- CHANGE ADDRESS: змінює адресу. Формат: change address ім'я адерса.
-- CHANGE NOTE: змінює зміст нотатки. Формат: change note (перші_літери_нотатки... або #тег) новий_зміст
-- CHANGE STATUS: змінює статус нотатки на "виконано" зі збереженням дати. Формат: change status (перші_літери_нотатки... або #тег)
-- PHONE: виводить телефон(и) контакту на екран. Формат: phone ім'я
-- DEL PHONE: видаляе телефон контакту. Формат: del phone ім'я телефон (необов'язковий праметр). Якщо номер введено то видаляється саме він, якщо ні то вибираєте який номер видалити
-- DEL CONTACT: Видаляє контакт з телефонної книги. Формат: del contact ім'я
-- DEL ADRESS: видалити адрес контакта. Формат: del adres ім'я
-- DEL NOTE: видаляє нотатку. Формат: del note (перші_літери_нотатки... або #тег)
-- DEL EMAIL: видаляє e-mail контакта. Формат: del email ім'я
-- DEL BDAY: видаляє дату народження контакта. Формат: del bday ім'я.
-- CONGRAT: виводить список контактів у яких буде день народження в зазначений період. Формат: congrat число_днів
-- SHOW CONTACTS: виводить на екран телефонну книгу Формат: show contacts
-- SHOW NOTES: виводить всі нотатки, дату сворення та статус виконання та дату виконання. Формат: show notes
-- SEARCH: виконує пошук по книзі контактів. знаходить всі співпадіння в номерах, іменах або імейлах. рядок пошуку не меньше 3-х символів. Формат: search рядок
-- SEARCH NOTE: знаходить співпадіння в нотатках від 1 символу або за тегом. Формат: search note (перші_літери_нотатки... або #тег)
-- SORT FOLDER: розсортовує файли по типах в теці по вказаному щляху. Розпаковує архіви, видаляє порожні теки. Переводить імена файлів і тек транслітом з кирилиці. Формат: sort folder шлях_до_теки. типи файлів можна задавати в конігураційному файлі config.JSON. Назва теки "archives" незмінна!
-- CLOSE, GOOD BYE, EXIT: виходить в операційну систему
-- HELP: виводить цей мануал на екран Імена файлв з телефонною книгою і з книгою нотаток також прописані в файлі config.JSON
+- HELLO: welcomes the user
+- SOUND OFF: turns off the sounding of voice messages. Format: sound off
+- SOUND ON: turns on the sounding of voice messages. Format: sound on
+- ADD CONTACT: adds a contact and its data to the phone book. Format: add contact name (mandatory parameter) phone e-mail address (optional parameters). User names cannot consist of only numbers and be shorter than 3 characters
+- ADD NOTE: adds a note (with the current date and status "not completed") to the list of notes. Format: add note text with spaces between words
+- ADD TAG: adds a tag to the note. Format: add tag first_letters_of_note... #tag
+- ADD ADDRESS: adds the contact's address. Format: add address name address
+- ADD EMAIL: adds the contact's e-mail address. Format: add email name e-mail
+- ADD BDAY: adds the contact's date of birth. Format: add bday name date
+
+- CHANGE PHONE: changes the contact's phone number(s). Format: change phone name phone (optional parameter). If the contact does not have a phone number, it will be added immediately. If the contact has 1 number, it will be replaced by a new one. If the contact has more than one phone number in the record, you need to select which one you'd like to change
+- CHANGE EMAIL: changes the contact's e-mail address. Format: change email name (mandatory parameter) e-mail
+- CHANGE B_DAY: changes the contact's date of birth. Format: change b_day name date
+- CHANGE ADDRESS: changes the contact's address. Format: change address name address
+- CHANGE NOTE: changes the content of the note. Format: change note (first_letters_of_note... or #tag) new_content
+- CHANGE STATUS: changes the status of the note to "done" and saves the date of change. Format: change status (first_letters_of_note... or #tag)
+
+- PHONE: displays the contact's phone(s) on the screen. Format: phone name
+- DEL PHONE: deletes the contact's phone number. Format: del phone name phone (optional parameter). If a certain phone number was entered, it will be deleted, if not, then you need to select which number to delete
+- DEL CONTACT: deletes the contact from the phone book. Format: del contact name
+- DEL ADDRESS: deletes the contact's address. Format: del address name
+- DEL NOTE: deletes the note. Format: del note (first_letters_of_note... or #tag)
+- DEL EMAIL: deletes the contact's e-mail. Format: del email name
+- DEL BDAY: deletes the contact's date of birth. Format: del bday name
+
+- CONGRAT: displays a list of contacts who will have a birthday during the specified period. Format: congrat number_of_days
+- SHOW CONTACTS: displays the phonebook. Format: show contacts
+- SHOW NOTES: displays all notes, dates of creation, execution statuses and execution dates. Format: show notes
+- SEARCH: executes the search in the contact book. Finds all matches in numbers, names or e-mails. The search string must contain at least 3 characters. Format: search string
+- SEARCH NOTE: matches notes by at least 1 character or by tag. Format: search note (first_letters_of_note... or #tag)
+- SORT FOLDER: sorts files by type in the folder at the specified path. Unpacks archives, deletes empty folders. Translates the names of files and folders with translit from Cyrillic. Format: sort folder path_to_folder. File types can be specified in the config.JSON configuration file. It is forbidden to change the name of the "archives" folder!
+- CLOSE, GOOD BYE, EXIT: terminates work with the bot and exits to the operating system
+- HELP: displays this manual on the screen. The names of the phone book and note book files are also written in the config.JSON file
