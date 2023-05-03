@@ -1,6 +1,6 @@
 MemoMind 1.0.3 uploaded to TestPyPi 
 View at:
-https://test.pypi.org/project/MemoMind/1.0.2/
+https://test.pypi.org/project/MemoMind/1.0.3/
 
 To install the package, use pip install -i https://test.pypi.org/simple/ MemoMind==1.0.3
 
