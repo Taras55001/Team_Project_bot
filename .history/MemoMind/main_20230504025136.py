@@ -69,9 +69,11 @@ def input_error(func):
 
 def greet(*args):
     if languages:
-        return "Hello, I am your personal MemoMind bot assistant. How can I help?"
+        return "Hello, I am your personal MemoMind 1.0.1 bot assistant. How can I help?"
     else:
-        return "Вітаю, я Ваш персональний бот-помічник MemoMind  Чим можу допомогти?"
+        return (
+            "Вітаю, я Ваш персональний бот-помічник MemoMind 1.0.1. Чим можу допомогти?"
+        )
 
 
 def add_contact(book: AddressBook, contact: Name, *params):
@@ -601,12 +603,12 @@ def main():
     notebook = NotePad()
     if languages:
         print(
-            "MemoMind \n",
+            "MemoMind 1.0.1\n",
             f"Available commands: {', '.join(k for k in COMMANDS.keys())}",
         )
     else:
         print(
-            "MemoMind \n",
+            "MemoMind 1.0.1\n",
             f"Доступні команди: {', '.join(k for k in COMMANDS.keys())}",
         )
 
