@@ -594,7 +594,7 @@ def main():
                 if command == exit:
                     print(command(book1, notebook), *args)
                 else:
-                    print(command((notebook if command in WITH_NOTES else book1), *args))
+                    print(command((notebook, languages if command in WITH_NOTES else book1), *args))
         else:
             if command == exit:
                     print(command(book1, notebook), *args)

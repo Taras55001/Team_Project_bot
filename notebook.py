@@ -1,9 +1,8 @@
 """adding ,changing ,changing status, deleting, searching notes
 , adding tag, searching by tag"""
 from ab_classes import Note, NotePad, HashTag
-from main import languages
 
-def input_error(func):
+def input_error(func, languages):
     def wrapper(*args):
         try:
             result = func(*args)
