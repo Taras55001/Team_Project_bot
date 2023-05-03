@@ -41,9 +41,9 @@ TRANSLATION = (
 CYR = list(CYRILLIC_SYMBOLS)
 TRANS = {}
 
-for cyr, lat in zip(CYR, TRANSLATION):
-    TRANS[ord(cyr)] = lat
-    TRANS[ord(cyr.upper())] = lat.upper()
+for c, l in zip(CYR, TRANSLATION):
+    TRANS[ord(c)] = l
+    TRANS[ord(c.upper())] = l.upper()
 
 
 def normalize(file_name: str) -> str:

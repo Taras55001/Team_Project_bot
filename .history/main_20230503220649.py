@@ -528,7 +528,7 @@ def language(book, *args):
             cfg_data["Language"] = "eng"
             json.dump(cfg_data, cfg)
             return (
-                "The language was successfully selected. To apply pease restart the bot"
+                f"The language was successfully selected. To apply pease restart the bot"
                 if languages
                 else "Мова виводу на екран була успішно вибрана. Зміниться після перезапуску боту"
             )
