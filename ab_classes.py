@@ -136,7 +136,7 @@ class Birthday(Field):
                 )  # Date validaiton "/"
             except ValueError:
                 if languages:
-                    raise ValueError("use date format DD.MM.YYYY or DD/MM/YYYY")
+                    raise ValueError("use the date format DD.MM.YYYY or DD/MM/YYYY")
                 else:
                     raise ValueError("використовуйте формат дати ДД.ММ.РРРР або ДД/ММ/РРРР")
 
@@ -194,7 +194,7 @@ class Phone(Field):
         else:
             if languages:
                 raise ValueError(
-                f"\nYou entered the wrong number format.\n Try again!\n Minimum number of characters: {Phone.min_len}.\n Maximum: {Phone.max_len}."
+                f"\nYou entered the wrong phone number format.\n Try again!\n Minimum number of characters: {Phone.min_len}.\n Maximum: {Phone.max_len}."
             )
             else:
                 raise ValueError(
@@ -270,7 +270,7 @@ class Record:
             self.email = email
         else:
             if languages:
-                raise IndexError("E-mail already entered")
+                raise IndexError("E-mail is already entered")
             else:
                 raise IndexError("E-mail вже введений")
 
@@ -287,7 +287,7 @@ class Record:
             self.adress = adres
         else:
             if languages:
-                raise IndexError("Address already entered")
+                raise IndexError("Address is already entered")
             else:
                 raise IndexError("Адреса вже введена")
 
@@ -296,16 +296,16 @@ class Record:
             self.birthday = birthday
         else:
             if languages:
-                raise IndexError("Birthday already entered")
+                raise IndexError("Birthday is already entered")
             else:
                 raise IndexError("День народження вже введений")
 
     def show_phones(self):
         if not self.phones:
             if languages:
-                return "This contact has no phones"
+                return "This contact has no phone numbers"
             else:
-                return "В цього контакта не має телефонів"
+                return "В цього контакта немає номерів телефону"
         elif len(self.phones) == 1:
             if languages:
                 return f"Current phone number {self.phones[0]}"
@@ -313,9 +313,9 @@ class Record:
                 return f"Поточний номер телефону {self.phones[0]}"
         else:
             if languages:
-                output = "This contact has several phones:\n"
+                output = "This contact has several phone numbers:\n"
             else:
-                output = "В цього контакта декілька телефонів:\n"
+                output = "В цього контакта декілька номерів телефону:\n"
             for i, phone in enumerate(self.phones, 1):
                 output += f"{i}: {phone} "
             return output
@@ -338,7 +338,7 @@ class Record:
     def change_birthday(self, new_birthday: Birthday):
         if not self.birthday:
             if languages:
-                raise IndexError("Date of birth not yet entered")
+                raise IndexError("The date of birth is not entered yet")
             else:
                 raise IndexError("Дата народження ще не введена")
         self.birthday = new_birthday
@@ -354,7 +354,7 @@ class Record:
             old_address = self.adress
             self.adress = new_address
             if languages:
-                return f"Changed address from {old_address} to {new_address}"
+                return f"Address is changed from {old_address} to {new_address}"
             else:
                 return f"Змінено адресу з {old_address} на {new_address}"
 
@@ -363,7 +363,7 @@ class Record:
             if languages:
                 raise IndexError("This contact has no phone numbers saved")
             else:
-                raise IndexError("В цього контакта не має збережених телефонів")
+                raise IndexError("В цього контакта немає збережених номерів телефону")
         else:
             return self.phones.pop(num - 1)
 
@@ -372,7 +372,7 @@ class Record:
             if languages:
                 raise IndexError("This contact has no phone numbers saved")
             else:
-                raise IndexError("В цього контакта не має збережених телефонів")
+                raise IndexError("В цього контакта немає збережених номерів телефону")
         else:
             self.phones.pop(num - 1)
             self.phones.insert(num - 1, phone_new)
