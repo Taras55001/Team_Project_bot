@@ -106,9 +106,14 @@ class Name(Field):
         if not (value.isnumeric() or len(value) < 2):  # Name validation
             self.__value = value
         else:
-            raise ValueError(
-                "Ім'я не може складатись тільки з цифр та мінімальна довжина імені 2 символа."
-            )
+            if languages:
+                raise ValueError(
+                    "The name cannot consist only of numbers and the minimum length of the name is 2 characters."
+                )
+            else:
+                raise ValueError(
+                    "Ім'я не може складатись тільки з цифр та мінімальна довжина імені 2 символа."
+                )
 
 
 class Birthday(Field):
@@ -130,7 +135,10 @@ class Birthday(Field):
                     value, "%d/%m/%Y"
                 )  # Date validaiton "/"
             except ValueError:
-                raise ValueError("використовуйте формат дати ДД.ММ.РРРР або ДД/ММ/РРРР")
+                if languages:
+                    raise ValueError("use date format DD.MM.YYYY or DD/MM/YYYY")
+                else:
+                    raise ValueError("використовуйте формат дати ДД.ММ.РРРР або ДД/ММ/РРРР")
 
     def __str__(self) -> str:
         return datetime.strftime(self._value, "%d.%m.%Y")
@@ -150,7 +158,10 @@ class Email(Field):
         if re.match(pattern, value):
             self.__value = value
         else:
-            raise ValueError("Невірний формат e-mail")
+            if languages:
+                raise ValueError("Invalid e-mail format")
+            else:
+                raise ValueError("Невірний формат e-mail")
 
 
 class Address(Field):
@@ -181,7 +192,12 @@ class Phone(Field):
         elif len(number) == 9:
             number = "+380" + number
         else:
-            raise ValueError(
+            if languages:
+                raise ValueError(
+                f"\nYou entered the wrong number format.\n Try again!\n Minimum number of characters: {Phone.min_len}.\n Maximum: {Phone.max_len}."
+            )
+            else:
+                raise ValueError(
                 f"\nВи ввели невірний формат номера.\n Спробуйте знову!\n Мінімальна к-сть символів:{Phone.min_len}.\n Максимальна:{Phone.max_len}."
             )
 
@@ -206,7 +222,10 @@ class Record:
         self.adress = adress
 
     def __str__(self):
-        line = "{}: Телефони: {}; E-mail: {}; Дата народження: {}; Адреса: {} \n"
+        if languages:
+            line = "{}: Phones: {}; E-mail: {}; Date of birth: {}; Address: {} \n"
+        else:
+            line = "{}: Телефони: {}; E-mail: {}; Дата народження: {}; Адреса: {} \n"
         address =  self.adress if self.adress else "-" 
         email = self.email if self.email else "-"
         birthday = self.birthday if self.birthday else "-"
@@ -219,7 +238,10 @@ class Record:
         )
 
     def __repr__(self):
-        line = "{}: Телефони: {}; E-mail: {}; Дата народження: {}; Адреса: {} \n"
+        if languages:
+            line = "{}: Phones: {}; E-mail: {}; Date of birth: {}; Address: {} \n"
+        else:
+            line = "{}: Телефони: {}; E-mail: {}; Дата народження: {}; Адреса: {} \n"
         email = self.email if self.email else "-"
         address = self.adress if self.adress else "-"
         birthday = self.birthday if self.birthday else "-"
@@ -247,32 +269,53 @@ class Record:
         if not self.email:
             self.email = email
         else:
-            raise IndexError("E-mail вже введений")
+            if languages:
+                raise IndexError("E-mail already entered")
+            else:
+                raise IndexError("E-mail вже введений")
 
     def add_phone(self, phone: Phone):
         if phone in self.phones:
-            raise IndexError("Цей номер телефону вже існує")
+            if languages:
+                raise IndexError("This phone number already exists")
+            else:
+                raise IndexError("Цей номер телефону вже існує")
         self.phones.append(phone)
 
     def add_adress(self, adres: Address):
         if not self.adress:
             self.adress = adres
         else:
-            raise IndexError("Адреса вже введена")
+            if languages:
+                raise IndexError("Address already entered")
+            else:
+                raise IndexError("Адреса вже введена")
 
     def add_birthday(self, birthday: Birthday):
         if not self.birthday:
             self.birthday = birthday
         else:
-            raise IndexError("День народження вже введений")
+            if languages:
+                raise IndexError("Birthday already entered")
+            else:
+                raise IndexError("День народження вже введений")
 
     def show_phones(self):
         if not self.phones:
-            return "В цього контакта не має телефонів"
+            if languages:
+                return "This contact has no phones"
+            else:
+                return "В цього контакта не має телефонів"
         elif len(self.phones) == 1:
-            return f"Поточний номер телефону {self.phones[0]}"
+            if languages:
+                return f"Current phone number {self.phones[0]}"
+            else:
+                return f"Поточний номер телефону {self.phones[0]}"
         else:
-            output = "В цього контакта декілька телефонів:\n"
+            if languages:
+                output = "This contact has several phones:\n"
+            else:
+                output = "В цього контакта декілька телефонів:\n"
             for i, phone in enumerate(self.phones, 1):
                 output += f"{i}: {phone} "
             return output
@@ -282,33 +325,54 @@ class Record:
 
     def show_email(self):
         if not self.email:
-            return "В цього контакта немає e-mail"
+            if languages:
+                return "This contact has no e-mail"
+            else:
+                return "В цього контакта немає e-mail"
         else:
-            return f"Поточний e-mail {self.email}"
+            if languages:
+                return f"Current e-mail {self.email}"
+            else:
+                return f"Поточний e-mail {self.email}"
 
     def change_birthday(self, new_birthday: Birthday):
         if not self.birthday:
-            raise IndexError("Дата народження ще не введена")
+            if languages:
+                raise IndexError("Date of birth not yet entered")
+            else:
+                raise IndexError("Дата народження ще не введена")
         self.birthday = new_birthday
 
     def change_address(self, new_address: Address):
         if not self.adress:
             self.adress = new_address
-            return f"Додано адресу {new_address}"
+            if languages:
+                return f"Added {new_address}"
+            else:
+                return f"Додано адресу {new_address}"
         else:
             old_address = self.adress
             self.adress = new_address
-            return f"Змінено адресу з {old_address} на {new_address}"
+            if languages:
+                return f"Changed address from {old_address} to {new_address}"
+            else:
+                return f"Змінено адресу з {old_address} на {new_address}"
 
     def del_phone(self, num=1):
         if not self.phones:
-            raise IndexError("В цього контакта не має збережених телефонів")
+            if languages:
+                raise IndexError("This contact has no phone numbers saved")
+            else:
+                raise IndexError("В цього контакта не має збережених телефонів")
         else:
             return self.phones.pop(num - 1)
 
     def edit_phone(self, phone_new: Phone, num=1):
         if not self.phones:
-            raise IndexError("В цього контакта не має збережених телефонів")
+            if languages:
+                raise IndexError("This contact has no phone numbers saved")
+            else:
+                raise IndexError("В цього контакта не має збережених телефонів")
         else:
             self.phones.pop(num - 1)
             self.phones.insert(num - 1, phone_new)
@@ -350,7 +414,10 @@ class AddressBook(UserDict):
         output = ""
         for contact in self.data.values():
             output += str(contact)
-        output += f"Всього: {len(self.data)} контактів."
+        if languages:
+            output += f"Total: {len(self.data)} contacts."
+        else:
+            output += f"Всього: {len(self.data)} контактів."
         return output
 
     def search(self, pattern: str) -> list:
