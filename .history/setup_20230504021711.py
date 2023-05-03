@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="MemoMind",
-    version="1.0.2",
+    version="1.0.1",
     author="Code Cobras",
     author_email="camyray1992@gmail.com",
     description="Personal Assistant Bot",
