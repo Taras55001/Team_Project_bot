@@ -462,9 +462,7 @@ def sort_targ_folder(book: AddressBook, languges, *args):
 
 
 def voice(content, *yes):
-    engine = pyttsx3.init("sapi5")
-    voices = engine.getProperty("voices")
-    engine.setProperty("voice", voices[0].id)
+    engine = pyttsx3.init("sapi5")                        
     engine.say(content)
     engine.runAndWait()
     return content
