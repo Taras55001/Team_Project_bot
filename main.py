@@ -52,19 +52,20 @@ def add_contact(book: AddressBook, contact: Name, *params):
 
         for i, param in enumerate(params):
             if "@" in param:
-                email = Email(param)
+                email = Email(param) if "@" in param else "-"
             elif re.match(phone_regex, param):
                 phone = Phone(param)
             else:
                 address.append(param)
 
         address_str = " ".join(address)
-        address = Address(address_str) if address_str else None
+        address = Address(address_str) if address_str else "-"
+        email_display = email.value if email else "-"
         rec_new = Record(contact_new, phone, email, address)
 
         if contact_new.value not in book.keys():
             book.add_record(rec_new)
-            return f"Додано контакт '{contact}' з телефоном: {phone}, електронною поштою: {email} та адресою: {address}"
+            return f"Додано контакт '{contact}' з телефоном: {phone}, електронною поштою: {email_display} та адресою: {address}"
         else:
             rec = book.get(contact)
             if phone:
