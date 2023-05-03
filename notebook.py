@@ -14,7 +14,7 @@ def input_error(func):
 
         except AttributeError:
             if languages:
-
+                return "Check the correctness of the data set:"
             else:
                 return "Перевірте правильність набору даних:"
 
@@ -32,13 +32,13 @@ def add_note(notebook: NotePad, *args):
     text = f'{" ".join(args)}'
     if not text:
         if languages:
-
+            raise ValueError("enter the note text")
         else:
             raise ValueError("введіть текст нотатки")
     record = Note(text)
     notebook.add_note(record)
     if languages:
-
+        return "Note added"
     else:
         return "Нотатка добавлена"
 
