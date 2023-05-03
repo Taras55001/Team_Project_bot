@@ -52,9 +52,9 @@ def input_error(func):
 
         except AttributeError:
             if languages:
-                return "Check the correctness of data inputs and if contact was created"
+                return "Check the correctness of data inputs:"
             else:
-                return "Перевірте правильність вводу даних та чи створений контакт"
+                return "Перевірте правильність вводу даних:"
 
         except ValueError as err:
             return err
@@ -456,9 +456,9 @@ def search(book: AddressBook, *args):
 
 
 @input_error
-def sort_targ_folder(book: AddressBook, *args):
+def sort_targ_folder(book: AddressBook, languges, *args):
     target_path = " ".join(args)
-    return sort_folder.main(target_path)
+    return sort_folder.main(target_path, languges)
 
 
 def voice(content, *yes):
@@ -484,7 +484,7 @@ def exit(book: AddressBook, notebook: NotePad, *args):
     is_ended = True
     save_data(book, notebook)
     if languages:
-        return voice("Good bye") if sound else "Good bye"
+        return voice("Goodbye") if sound else "Goodbye"
     else:
         return "До побачення"
 

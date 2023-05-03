@@ -52,9 +52,9 @@ def input_error(func):
 
         except AttributeError:
             if languages:
-                return "Check the correctness of data inputs and if contact was created"
+                return "Check the correctness of data inputs:"
             else:
-                return "Перевірте правильність вводу даних та чи створений контакт"
+                return "Перевірте правильність вводу даних:"
 
         except ValueError as err:
             return err

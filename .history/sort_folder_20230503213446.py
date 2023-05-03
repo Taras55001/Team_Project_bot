@@ -121,7 +121,7 @@ def normalize_all(path: Path):
 
 
 def report_category(category: str, files_lst: list):
-    if languages:
+    if languges:
         print(f'Found files in category "{category.capitalize()}": ', len(files_lst))
     else:
         print(
@@ -133,7 +133,7 @@ def main(work_path):
     read_config()
 
     if not work_path:
-        if languages:
+        if languges:
             return "Please specify the target path in the parameters"
         else:
             return "Будь ласка вкажіть цільовий шлях в параметрах"
@@ -141,7 +141,7 @@ def main(work_path):
     path = Path(work_path)
 
     if not path.exists():
-        if languages:
+        if languges:
             return "The specified path does not exist"
         else:
             return "Вказаний шлях не існує"
@@ -164,11 +164,11 @@ def main(work_path):
         del_empty_folders(path)
 
     except PermissionError:
-        if languages:
+        if languges:
             return "No change is allowed. Close the target folder or its subfolders in all other applications."
         else:
             return "Немає дозволу на зміни. Закрийте цільову теку або її підтеки в всіх інших додатках."
-    if languages:
+    if languges:
         output = f"""Found files of known types: {', '.join(f for f in known_types)}. Total {len(known_types)} files.
 Found files of unknown types: {', '.join(f for f in unknown_types)}. total {len(unknown_types)} files.
 Deleted empty folders {len(deleted_folders)}"""
