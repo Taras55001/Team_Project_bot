@@ -3,7 +3,7 @@ from datetime import datetime
 from itertools import islice
 import pickle
 import re
-import pkgutil
+#import pkgutil
 import os
 import json
 
