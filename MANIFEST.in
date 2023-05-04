@@ -1,3 +1,2 @@
-include README.md
-include LICENSE.txt
-recursive-include memomind/*
+include memomind/config.JSON
+include memomind/*.md
