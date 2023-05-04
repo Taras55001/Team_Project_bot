@@ -3,11 +3,10 @@ from datetime import datetime
 from itertools import islice
 import pickle
 import re
-#import pkgutil
 import os
 import json
 
-# cfg = pkgutil.get_data(__package__, "config.JSON")
+
 
 with open(os.path.join("memomind", "config.JSON")) as cfg:
     cfg_data = json.load(cfg)
