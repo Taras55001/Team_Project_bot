@@ -217,12 +217,14 @@ def change(
                     input(voice("Which one do you want to change (enter index):"))
                 )
             else:
-                num = int(input(voice("Який ви хочете змінити (введіть індекс):")))
+                num = int(
+                    input(voice("Який ви хочете змінити (введіть індекс):")))
         if not phone:
             if languages:
                 phone_new = Phone(input(voice("Please enter a new number:")))
             else:
-                phone_new = Phone(input(voice("Будь ласка введіть новий номер:")))
+                phone_new = Phone(
+                    input(voice("Будь ласка введіть новий номер:")))
         else:
             phone_new = Phone(phone)
         old_phone = rec.phones[num - 1]
@@ -299,9 +301,11 @@ def change_address(book: AddressBook, contact: str, *address):
     else:
         if not x:
             if languages:
-                address_new = Address(input(voice("Please enter a new address:")))
+                address_new = Address(
+                    input(voice("Please enter a new address:")))
             else:
-                address_new = Address(input(voice("Будь ласка, введіть нову адресу:")))
+                address_new = Address(
+                    input(voice("Будь ласка, введіть нову адресу:")))
         else:
             address_new = Address(x)
         old_address = rec.adress
@@ -342,7 +346,8 @@ def del_contact(book: AddressBook, *args):
     ans = None
     while ans != "y":
         if languages:
-            ans = input(f"Are you sure you want to delete {contact}? (Y/N)").lower()
+            ans = input(
+                f"Are you sure you want to delete {contact}? (Y/N)").lower()
         else:
             ans = input(
                 f"Ви впевнені що хочете видалити контакт {contact}? (Y/N)"
@@ -461,9 +466,11 @@ def sort_targ_folder(book: AddressBook, *args):
 
 
 def voice(content, *yes):
+    sound
     engine = pyttsx3.init("sapi5")
-    engine.say(content)
-    engine.runAndWait()
+    if sound:
+        engine.say(content)
+        engine.runAndWait()
     return content
 
 
@@ -635,7 +642,8 @@ def main():
                     print(command(book1, notebook), *args)
                 else:
                     print(
-                        command((notebook if command in WITH_NOTES else book1), *args)
+                        command(
+                            (notebook if command in WITH_NOTES else book1), *args)
                     )
         else:
             if command == exit:
