@@ -15,11 +15,12 @@ deleted_folders = []
 
 languages = True
 
+dir_path = os.path.dirname(__file__)
 
 def read_config():
     global CATEGORIES
 
-    with open(os.path.join("memomind", "config.JSON")) as cfg:
+    with open(os.path.join(dir_path, "config.JSON")) as cfg:
         global languages
         cfg_data = json.load(cfg)
         CATEGORIES = cfg_data["FILETYPES"]
@@ -63,7 +64,7 @@ def move_files(files_list: list, target_path: Path, new_folder_name: str) -> lis
         new_name = normalize(file.name)
         output_list.append(new_name)
         try:
-            file.rename(f"{new_dir}\{new_name}")
+            file.rename(f"{new_dir}\\{new_name}")
         except FileExistsError:
             file.unlink()  # delete doubles
     return output_list
